@@ -24,9 +24,11 @@ features = [
 
 # create a group identifier from the complete symptom vector  # Build a grouping key from all symptom columns; identical symptom patterns will receive the same group ID.
 # Identical symptom vectors receive the same group.  # This ensures that all rows sharing the same symptom feature combination stay together across splits.
-groups = (
-    df[features].astype(str).agg("|".join, axis=1)
-)  # Convert each row's symptom values to strings and concatenate them into one group label.
+groups = df[features].apply(
+    lambda row: tuple(row.tolist()),
+    axis=1
+)
+# Convert each row's symptom values to strings and concatenate them into one group label.
 
 # First split: 70% train, 30% temporary  # Use an initial split to reserve 30% of the data for a temporary holdout before creating validation/test sets.
 
