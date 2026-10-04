@@ -1,0 +1,732 @@
+[
+{
+"concept_id": "shortness_of_breath",
+"preferred_term": "Shortness of breath",
+"synonyms": [
+"shortness of breath",
+"breathlessness",
+"difficulty breathing",
+"breathing difficulty",
+"trouble breathing",
+"hard to breathe",
+"having trouble breathing",
+"struggling to breathe",
+"breathing is difficult",
+"cannot breathe properly",
+"can't breathe properly",
+"feeling short of breath",
+"feeling breathless",
+"out of breath",
+"getting out of breath",
+"dyspnea",
+"dyspnoea",
+"SOB"
+],
+"definition": "A subjective sensation of difficult, uncomfortable, or insufficient breathing.",
+"related_terms": [
+"orthopnea",
+"difficulty_breathing",
+"apnea",
+"wheezing"
+],
+"ml_feature_mapping": {
+"shortness_of_breath": 1
+}
+},
+{
+"concept_id": "difficulty_breathing",
+"preferred_term": "Difficulty breathing",
+"synonyms": [
+"difficulty breathing",
+"difficult breathing",
+"breathing difficulty",
+"trouble breathing",
+"difficulty catching my breath",
+"hard to breathe",
+"having difficulty breathing",
+"breathing feels difficult",
+"breathing feels hard",
+"can't breathe easily"
+],
+"definition": "A reported difficulty or increased effort associated with breathing.",
+"related_terms": [
+"shortness_of_breath",
+"dyspnea",
+"wheezing"
+],
+"ml_feature_mapping": {
+"difficulty_breathing": 1
+}
+},
+{
+"concept_id": "orthopnea",
+"preferred_term": "Orthopnea",
+"synonyms": [
+"orthopnea",
+"orthopnoea",
+"difficulty breathing when lying down",
+"difficulty breathing when lying flat",
+"shortness of breath when lying down",
+"shortness of breath when lying flat",
+"breathlessness when lying down",
+"breathlessness when lying flat",
+"trouble breathing when lying down",
+"trouble breathing when lying flat",
+"breathing gets worse when lying down",
+"can't breathe when lying flat"
+],
+"definition": "Difficulty breathing that occurs or becomes worse when lying flat.",
+"related_terms": [
+"shortness_of_breath",
+"heart_failure"
+],
+"ml_feature_mapping": {
+"shortness_of_breath": 1
+}
+},
+{
+"concept_id": "pain_with_breathing",
+"preferred_term": "Pain with breathing",
+"synonyms": [
+"chest hurts when I breathe",
+"chest hurts when breathing",
+"chest hurts when I take a breath",
+"chest hurts when I take a deep breath",
+"my chest hurts when I breathe",
+"my chest hurts when I take a deep breath",
+"chest pain when breathing",
+"chest pain when I breathe",
+"chest pain when taking a deep breath",
+"pain in my chest when I breathe",
+"pain in my chest when taking a deep breath",
+"pain when breathing",
+"pain while breathing",
+"pain with breathing",
+"breathing causes pain",
+"pain when I breathe",
+"pain when taking a breath",
+"pain when taking a deep breath",
+"pain on deep inspiration",
+"painful breathing",
+"breathing is painful",
+"pleuritic pain",
+"pleuritic chest pain"
+],
+"definition": "Pain that occurs or worsens during breathing, particularly deep inspiration.",
+"related_terms": [
+"sharp_chest_pain",
+"chest_pain"
+],
+"ml_feature_mapping": {
+"pain_with_breathing": 1
+}
+},
+{
+"concept_id": "cough",
+"preferred_term": "Cough",
+"synonyms": [
+"cough",
+"coughing",
+"persistent cough",
+"constant cough",
+"repeated coughing",
+"coughing frequently",
+"hacking cough"
+],
+"definition": "A reflex action that helps clear the airways.",
+"related_terms": [
+"productive_cough",
+"hemoptysis"
+],
+"ml_feature_mapping": {
+"cough": 1
+}
+},
+{
+"concept_id": "productive_cough",
+"preferred_term": "Productive cough",
+"synonyms": [
+"productive cough",
+"wet cough",
+"phlegmy cough",
+"cough with mucus",
+"coughing up mucus",
+"coughing up phlegm",
+"mucus when coughing",
+"phlegm when coughing",
+"bringing up mucus",
+"bringing up phlegm",
+"cough with sputum",
+"coughing up sputum"
+],
+"definition": "A cough that produces mucus or sputum.",
+"related_terms": [
+"cough",
+"chest_congestion"
+],
+"ml_feature_mapping": {
+"productive_cough": 1
+}
+},
+{
+"concept_id": "wheezing",
+"preferred_term": "Wheezing",
+"synonyms": [
+"wheezing",
+"wheeze",
+"wheezes",
+"whistling breathing",
+"whistling sound when breathing",
+"whistling noise in my chest",
+"high pitched breathing",
+"high-pitched breathing",
+"noisy breathing"
+],
+"definition": "A high-pitched breathing sound commonly associated with narrowed airways.",
+"related_terms": [
+"shortness_of_breath",
+"difficulty_breathing",
+"asthma"
+],
+"ml_feature_mapping": {
+"wheezing": 1
+}
+},
+{
+"concept_id": "chest_tightness",
+"preferred_term": "Chest tightness",
+"synonyms": [
+"chest tightness",
+"tight chest",
+"tightness in my chest",
+"pressure in my chest",
+"feeling of tightness in the chest",
+"chest feels tight",
+"constricted chest",
+"squeezing sensation in chest"
+],
+"definition": "A sensation of tightness, pressure, constriction, or squeezing in the chest.",
+"related_terms": [
+"chest_pain",
+"shortness_of_breath"
+],
+"ml_feature_mapping": {
+"chest_tightness": 1
+}
+},
+{
+"concept_id": "chest_congestion",
+"preferred_term": "Chest congestion",
+"synonyms": [
+"chest congestion",
+"congestion in the chest",
+"congested chest",
+"chest feels congested",
+"mucus in my chest",
+"mucus buildup in chest",
+"phlegm in chest",
+"chest feels full of mucus"
+],
+"definition": "A sensation of mucus or congestion in the chest or lower airways.",
+"related_terms": [
+"productive_cough",
+"cough"
+],
+"ml_feature_mapping": {
+"chest_congestion": 1
+}
+},
+{
+"concept_id": "hemoptysis",
+"preferred_term": "Hemoptysis",
+"synonyms": [
+"hemoptysis",
+"coughing blood",
+"coughing up blood",
+"blood when coughing",
+"blood in my cough",
+"blood in sputum",
+"bloody sputum",
+"coughing up bloody mucus",
+"blood coming up when coughing"
+],
+"definition": "Coughing up blood originating from the respiratory tract.",
+"related_terms": [
+"cough",
+"productive_cough"
+],
+"ml_feature_mapping": {
+"hemoptysis": 1
+}
+},
+{
+"concept_id": "apnea",
+"preferred_term": "Apnea",
+"synonyms": [
+"apnea",
+"apnoea",
+"stopped breathing",
+"stopping breathing",
+"episodes of not breathing",
+"breathing stops",
+"pauses in breathing",
+"breathing pauses"
+],
+"definition": "A temporary cessation or pause in breathing.",
+"related_terms": [
+"shortness_of_breath"
+],
+"ml_feature_mapping": {
+"apnea": 1
+}
+},
+{
+"concept_id": "hoarseness",
+"preferred_term": "Hoarseness",
+"synonyms": [
+"hoarseness",
+"hoarse voice",
+"raspy voice",
+"raspy throat",
+"rough voice",
+"husky voice",
+"voice sounds hoarse",
+"voice sounds raspy",
+"change in voice"
+],
+"definition": "An abnormal change in the quality, pitch, or strength of the voice.",
+"related_terms": [
+"laryngitis",
+"sore_throat"
+],
+"ml_feature_mapping": {
+"hoarseness": 1
+}
+},
+{
+"concept_id": "sore_throat",
+"preferred_term": "Sore throat",
+"synonyms": [
+"sore throat",
+"throat pain",
+"painful throat",
+"pain in my throat",
+"throat hurts",
+"pain when swallowing",
+"painful swallowing",
+"scratchy throat",
+"irritated throat"
+],
+"definition": "Pain, irritation, or discomfort in the throat.",
+"related_terms": [
+"hoarseness",
+"laryngitis"
+],
+"ml_feature_mapping": {
+"sore_throat": 1
+}
+},
+{
+"concept_id": "nasal_congestion",
+"preferred_term": "Nasal congestion",
+"synonyms": [
+"nasal congestion",
+"stuffy nose",
+"blocked nose",
+"blocked nasal passages",
+"congested nose",
+"nose feels blocked",
+"difficulty breathing through my nose",
+"nasal blockage",
+"stuffed nose"
+],
+"definition": "Obstruction or stuffiness of the nasal passages.",
+"related_terms": [
+"sinus_congestion",
+"coryza"
+],
+"ml_feature_mapping": {
+"nasal_congestion": 1
+}
+},
+{
+"concept_id": "sinus_congestion",
+"preferred_term": "Sinus congestion",
+"synonyms": [
+"sinus congestion",
+"sinus pressure",
+"congested sinuses",
+"blocked sinuses",
+"sinus blockage",
+"pressure in my sinuses",
+"sinuses feel blocked",
+"sinus fullness"
+],
+"definition": "Congestion or pressure involving the paranasal sinuses.",
+"related_terms": [
+"nasal_congestion",
+"acute_sinusitis",
+"chronic_sinusitis"
+],
+"ml_feature_mapping": {
+"sinus_congestion": 1
+}
+},
+{
+"concept_id": "coryza",
+"preferred_term": "Coryza",
+"synonyms": [
+"coryza",
+"runny nose",
+"running nose",
+"watery nose",
+"nasal discharge",
+"runny nasal discharge",
+"nose is running",
+"clear nasal discharge"
+],
+"definition": "Inflammation of the nasal mucosa commonly associated with a runny nose and nasal discharge.",
+"related_terms": [
+"nasal_congestion",
+"common_cold",
+"flu"
+],
+"ml_feature_mapping": {
+"coryza": 1
+}
+},
+{
+"concept_id": "sharp_chest_pain",
+"preferred_term": "Sharp chest pain",
+"synonyms": [
+"sharp chest pain",
+"sharp pain in the chest",
+"stabbing chest pain",
+"stabbing pain in my chest",
+"piercing chest pain",
+"chest pain that feels sharp",
+"sharp pain in chest"
+],
+"definition": "A chest pain described as sharp, stabbing, or piercing.",
+"related_terms": [
+"pain_with_breathing",
+"chest_pain"
+],
+"ml_feature_mapping": {
+"sharp_chest_pain": 1
+}
+},
+{
+"concept_id": "chest_pain",
+"preferred_term": "Chest pain",
+"synonyms": [
+"cp",
+"chest pain",
+"pain in the chest",
+"chest discomfort",
+"discomfort in my chest",
+"pain around my chest"
+],
+"definition": "Pain or discomfort felt in the chest.",
+"related_terms": [
+"sharp_chest_pain",
+"chest_tightness",
+"pain_with_breathing"
+],
+"ml_feature_mapping": {}
+},
+{
+"concept_id": "palpitations",
+"preferred_term": "Palpitations",
+"synonyms": [
+"palpitations",
+"heart palpitations",
+"heart pounding",
+"heart racing",
+"racing heart",
+"heart beating fast",
+"feeling my heartbeat",
+"feeling my heart beat",
+"pounding heartbeat",
+"fluttering heartbeat",
+"heart fluttering"
+],
+"definition": "An awareness of one's heartbeat, which may feel rapid, pounding, fluttering, or irregular.",
+"related_terms": [
+"irregular_heartbeat",
+"increased_heart_rate"
+],
+"ml_feature_mapping": {
+"palpitations": 1
+}
+},
+{
+"concept_id": "irregular_heartbeat",
+"preferred_term": "Irregular heartbeat",
+"synonyms": [
+"irregular heartbeat",
+"irregular heart beat",
+"irregular pulse",
+"uneven heartbeat",
+"heart beating irregularly",
+"heart rhythm feels irregular",
+"skipped heartbeat",
+"heart skips a beat",
+"abnormal heartbeat"
+],
+"definition": "A reported sensation or observation that the heartbeat is not regular.",
+"related_terms": [
+"palpitations"
+],
+"ml_feature_mapping": {
+"irregular_heartbeat": 1
+}
+},
+{
+"concept_id": "increased_heart_rate",
+"preferred_term": "Increased heart rate",
+"synonyms": [
+"increased heart rate",
+"fast heart rate",
+"rapid heart rate",
+"high heart rate",
+"rapid pulse",
+"fast pulse",
+"heart rate is high",
+"heart is beating quickly",
+"tachycardia",
+"tachycardic"
+],
+"definition": "A heart rate that is reported or measured as elevated.",
+"related_terms": [
+"palpitations"
+],
+"ml_feature_mapping": {
+"increased_heart_rate": 1
+}
+},
+{
+"concept_id": "dizziness",
+"preferred_term": "Dizziness",
+"synonyms": [
+"dizziness",
+"dizzy",
+"feeling dizzy",
+"lightheadedness",
+"lightheaded",
+"feeling lightheaded",
+"feeling faint",
+"unsteady",
+"off balance",
+"room is spinning",
+"spinning sensation"
+],
+"definition": "A subjective sensation that may include lightheadedness, imbalance, or a spinning sensation.",
+"related_terms": [
+"fainting"
+],
+"ml_feature_mapping": {
+"dizziness": 1
+}
+},
+{
+"concept_id": "fever",
+"preferred_term": "Fever",
+"synonyms": [
+"feverish",
+"feeling feverish",
+"feel feverish",
+"I feel feverish",
+"feels feverish",
+"fever",
+"high temperature",
+"high body temperature",
+"elevated temperature",
+"temperature is high",
+"running a fever",
+"febrile",
+"feeling feverish"
+],
+"definition": "An abnormally elevated body temperature.",
+"related_terms": [
+"chills",
+"flu",
+"pneumonia"
+],
+"ml_feature_mapping": {
+"fever": 1
+}
+},
+{
+"concept_id": "chills",
+"preferred_term": "Chills",
+"synonyms": [
+"chills",
+"chills and shivering",
+"shivering",
+"shaking chills",
+"feeling cold and shivery",
+"uncontrollable shivering",
+"cold chills",
+"shivering episodes"
+],
+"definition": "A sensation of cold often accompanied by shivering or involuntary muscle contractions.",
+"related_terms": [
+"fever",
+"flu"
+],
+"ml_feature_mapping": {
+"chills": 1
+}
+},
+{
+"concept_id": "fatigue",
+"preferred_term": "Fatigue",
+"synonyms": [
+"fatigue",
+"tiredness",
+"extreme tiredness",
+"feeling tired",
+"very tired",
+"exhaustion",
+"feeling exhausted",
+"lack of energy",
+"low energy",
+"no energy"
+],
+"definition": "A subjective feeling of tiredness or lack of energy.",
+"related_terms": [
+"malaise",
+"general_weakness"
+],
+"ml_feature_mapping": {
+"fatigue": 1
+}
+},
+{
+"concept_id": "malaise",
+"preferred_term": "Malaise",
+"synonyms": [
+"malaise",
+"feeling unwell",
+"feeling ill",
+"feeling sick",
+"feeling generally unwell",
+"general feeling of illness",
+"not feeling well",
+"feeling under the weather"
+],
+"definition": "A general feeling of discomfort, illness, or lack of well-being.",
+"related_terms": [
+"fatigue",
+"general_weakness"
+],
+"ml_feature_mapping": {
+"malaise": 1
+}
+},
+{
+"concept_id": "general_weakness",
+"preferred_term": "General weakness",
+"synonyms": [
+"general weakness",
+"weakness",
+"feeling weak",
+"overall weakness",
+"body weakness",
+"weak all over",
+"feeling physically weak",
+"lack of strength",
+"loss of strength"
+],
+"definition": "A general subjective feeling of reduced physical strength.",
+"related_terms": [
+"fatigue",
+"malaise"
+],
+"ml_feature_mapping": {
+"general_weakness": 1
+}
+},
+{
+"concept_id": "vomiting",
+"preferred_term": "Vomiting",
+"synonyms": [
+"vomiting",
+"vomit",
+"throwing up",
+"threw up",
+"throw up",
+"being sick",
+"bringing up stomach contents",
+"emesis"
+],
+"definition": "Forceful expulsion of stomach contents through the mouth.",
+"related_terms": [
+"nausea"
+],
+"ml_feature_mapping": {
+"vomiting": 1
+}
+},
+{
+"concept_id": "nausea",
+"preferred_term": "Nausea",
+"synonyms": [
+"nausea",
+"feeling nauseous",
+"feeling sick",
+"sick to my stomach",
+"queasy",
+"feeling queasy",
+"upset stomach"
+],
+"definition": "An unpleasant sensation of needing or wanting to vomit.",
+"related_terms": [
+"vomiting"
+],
+"ml_feature_mapping": {}
+},
+{
+"concept_id": "dyspnea_on_exertion",
+"preferred_term": "Dyspnea on exertion",
+"synonyms": [
+"shortness of breath on exertion",
+"shortness of breath with exercise",
+"breathlessness with exercise",
+"breathless when exercising",
+"out of breath when exercising",
+"short of breath when walking",
+"breathing difficulty when walking",
+"get short of breath with activity",
+"breathless with physical activity"
+],
+"definition": "Shortness of breath that occurs or worsens during physical activity.",
+"related_terms": [
+"shortness_of_breath"
+],
+"ml_feature_mapping": {
+"shortness_of_breath": 1
+}
+},
+{
+"concept_id": "chest_congestion_with_phlegm",
+"preferred_term": "Chest congestion with phlegm",
+"synonyms": [
+"mucus stuck in my chest",
+"phlegm stuck in my chest",
+"chest full of mucus",
+"mucus buildup in my chest",
+"phlegm buildup in chest"
+],
+"definition": "A sensation of mucus or phlegm accumulating in the chest.",
+"related_terms": [
+"chest_congestion",
+"productive_cough"
+],
+"ml_feature_mapping": {
+"chest_congestion": 1,
+"productive_cough": 1
+}
+}
+]

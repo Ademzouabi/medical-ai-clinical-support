@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+*.pkl
+*.nt
+*.nt.gz
+*.zip
+*.7z
+*.rar
+Final_Augmented_dataset_Diseases_and_Symptoms.csv
+mesh2026.nt.gz
