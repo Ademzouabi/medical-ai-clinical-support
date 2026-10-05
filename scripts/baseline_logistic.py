@@ -1,4 +1,5 @@
 import pandas as pd  # Import pandas to read CSV files and handle tabular data.
+from pathlib import Path
 
 from sklearn.linear_model import (
     LogisticRegression,
@@ -12,11 +13,12 @@ from sklearn.metrics import (
 
 # Load data  # Read the train, validation, and test datasets from CSV files.
 
-train = pd.read_csv("v1_train.csv")  # Load the training split into a DataFrame.
+DATA_DIR = Path(__file__).resolve().parents[1] / "data" / "processed"
+train = pd.read_csv(DATA_DIR / "v1_train.csv")  # Load the training split into a DataFrame.
 validation = pd.read_csv(
-    "v1_validation.csv"
+DATA_DIR / "v1_validation.csv"
 )  # Load the validation split into a DataFrame.
-test = pd.read_csv("v1_test.csv")  # Load the test split into a DataFrame.
+test = pd.read_csv(DATA_DIR / "v1_test.csv")  # Load the test split into a DataFrame.
 
 # Separate features and target  # Split each dataset into inputs (X) and output label (y).
 

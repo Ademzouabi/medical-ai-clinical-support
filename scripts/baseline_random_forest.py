@@ -1,6 +1,7 @@
 import pandas as pd  # Import pandas to read CSV files and handle tabular data.
+from pathlib import Path
 
-from sklearn.neighbors import KNeighborsClassifier
+from sklearn.ensemble import RandomForestClassifier
 # Import the random forest model for multi-class classification.
 from sklearn.metrics import (
     accuracy_score,
@@ -11,11 +12,12 @@ from sklearn.metrics import (
 
 # Load data  # Read the train, validation, and test datasets from CSV files.
 
-train = pd.read_csv("v1_train.csv")  # Load the training split into a DataFrame.
+DATA_DIR = Path(__file__).resolve().parents[1] / "data" / "processed"
+train = pd.read_csv(DATA_DIR / "v1_train.csv")  # Load the training split into a DataFrame.
 validation = pd.read_csv(
-    "v1_validation.csv"
+DATA_DIR / "v1_validation.csv"
 )  # Load the validation split into a DataFrame.
-test = pd.read_csv("v1_test.csv")  # Load the test split into a DataFrame.
+test = pd.read_csv(DATA_DIR / "v1_test.csv")  # Load the test split into a DataFrame.
 
 # Separate features and target  # Split each dataset into inputs (X) and output label (y).
 
@@ -38,9 +40,10 @@ y_test = test["disease"]  # Keep the disease label as the test target.
 
 # Create model  # Initialize the logistic regression classifier.
 
-model = KNeighborsClassifier(
-    n_neighbors=5,
-    metric="hamming"
+model = RandomForestClassifier(
+    n_estimators=300,
+    random_state=42,
+    n_jobs=-1
 )
 
 

@@ -10,6 +10,41 @@ The project is being developed as a learning and research-oriented prototype. It
 
 
 
+\## Repository layout and commands
+
+Runtime modules live in `src/`; runtime terminology data and model artifacts are resolved from their file locations, not from the current working directory.
+
+```text
+src/                 V1 runtime modules
+tests/               deterministic matcher, clarification, pipeline, and end-to-end tests
+models/              locked V1 model artifact
+data/terminology/    runtime terminology vocabulary
+data/processed/      standardized and split V1 datasets
+data/evaluation/     held-out evaluation output
+data/raw/            raw datasets and the unintegrated MeSH RDF resource
+scripts/             data preparation, training, and experiment utilities
+docs/                project notes
+```
+
+From the repository root in PowerShell, use the project virtual environment:
+
+```powershell
+.\.venv\Scripts\python.exe src\predict.py
+$env:PYTHONPATH = "$PWD\src"
+.\.venv\Scripts\python.exe -m uvicorn api:app --app-dir src --reload
+$env:PYTHONPATH = "$PWD\src"
+.\.venv\Scripts\python.exe -c "from pipeline import start_pipeline; print(start_pipeline('I have fever.'))"
+.\.venv\Scripts\python.exe tests\test_matcher_review.py
+.\.venv\Scripts\python.exe tests\test_terminology_edge_cases.py
+.\.venv\Scripts\python.exe -m unittest tests\test_clarification.py
+.\.venv\Scripts\python.exe -m unittest tests\test_pipeline.py
+.\.venv\Scripts\python.exe -m unittest tests\test_end_to_end.py
+.\.venv\Scripts\python.exe -m unittest tests\test_api.py
+.\.venv\Scripts\python.exe scripts\final_evaluate_model.py
+```
+
+The evaluation command reads `data/processed/` and writes the locked artifact to `models/` plus predictions to `data/evaluation/`.
+
 \## Overview
 
 
@@ -512,9 +547,13 @@ The final model is stored as:
 
 ```text
 
-final\_logistic\_regression.pkl
+models/final\_logistic\_regression.pkl
 
 ```
+
+The model artifact is stored in `models/` and should be included in source-control commits. `src/predict.py` loads it relative to its own location, so prediction does not depend on the current working directory. Install runtime dependencies with `python -m pip install -r requirements.txt`.
+
+To regenerate the artifact from `data/processed/`, run `python scripts/final_evaluate_model.py` from the repository root. This retrains the final model on the training and validation splits and writes `models/final_logistic_regression.pkl` and `data/evaluation/final_test_predictions.csv`.
 
 
 
@@ -1524,7 +1563,7 @@ The model's predictions are generated from a research dataset and should not be 
 
 
 
-The repository will progressively evolve toward a structure similar to:
+The current V1 layout is described in the \"Repository layout and commands\" section above. The historic sketch below is superseded and retained only as an earlier roadmap note:
 
 
 
@@ -1590,7 +1629,7 @@ medical-ai-clinical-support/
 
 
 
-The exact structure may change as the React and FastAPI components are added.
+Future frontend and backend work should be added without changing the V1 runtime layout.
 
 
 

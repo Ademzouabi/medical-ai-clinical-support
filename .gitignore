@@ -4,6 +4,7 @@ __pycache__/
 venv/
 .env
 *.pkl
+!/models/final_logistic_regression.pkl
 *.nt
 *.nt.gz
 *.zip

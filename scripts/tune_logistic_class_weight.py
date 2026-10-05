@@ -1,4 +1,5 @@
 import pandas as pd  # Import pandas to read the split CSV files and store results in a table.
+from pathlib import Path
 from sklearn.linear_model import (
     LogisticRegression,
 )  # Import the logistic regression model for testing different class-weight settings.
@@ -9,8 +10,9 @@ from sklearn.metrics import (
 
 
 # Load data  # Read the training and validation sets from the CSV files.
-train = pd.read_csv("v1_train.csv")  # Load the training split.
-validation = pd.read_csv("v1_validation.csv")  # Load the validation split.
+DATA_DIR = Path(__file__).resolve().parents[1] / "data" / "processed"
+train = pd.read_csv(DATA_DIR / "v1_train.csv")  # Load the training split.
+validation = pd.read_csv(DATA_DIR / "v1_validation.csv")  # Load the validation split.
 
 X_train = train.drop(
     columns=["disease"]

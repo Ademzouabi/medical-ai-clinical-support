@@ -1,3 +1,8 @@
+from pathlib import Path
+import sys
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+
 from terminology_matcher import (
     normalize_clinical_text,
 )  # Import the text-normalization function being tested.

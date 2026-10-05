@@ -1,12 +1,15 @@
 import joblib
 import pandas as pd
+from pathlib import Path
 
 
 # ============================================================
 # 1. Load trained model
 # ============================================================
 
-MODEL_PATH = "final_logistic_regression.pkl"
+BASE_DIR = Path(__file__).resolve().parent
+PROJECT_DIR = BASE_DIR.parent
+MODEL_PATH = PROJECT_DIR / "models" / "final_logistic_regression.pkl"
 
 model = joblib.load(MODEL_PATH)
 
@@ -41,13 +44,14 @@ FEATURES = [
     "fatigue",
     "malaise",
     "general_weakness",
-    "vomiting"
+    "vomiting",
 ]
 
 
 # ============================================================
 # 3. Prediction function
 # ============================================================
+
 
 def predict_differential(features):
     """
@@ -60,16 +64,10 @@ def predict_differential(features):
     """
 
     # Check that all features exist
-    missing_features = [
-        feature
-        for feature in FEATURES
-        if feature not in features
-    ]
+    missing_features = [feature for feature in FEATURES if feature not in features]
 
     if missing_features:
-        raise ValueError(
-            f"Missing features: {missing_features}"
-        )
+        raise ValueError(f"Missing features: {missing_features}")
 
     # Check values
     invalid_features = {
@@ -80,15 +78,11 @@ def predict_differential(features):
 
     if invalid_features:
         raise ValueError(
-            "All features must currently be 0 or 1. "
-            f"Invalid values: {invalid_features}"
+            f"All features must currently be 0 or 1. Invalid values: {invalid_features}"
         )
 
     # Create dataframe in EXACT training feature order
-    X = pd.DataFrame(
-        [[features[feature] for feature in FEATURES]],
-        columns=FEATURES
-    )
+    X = pd.DataFrame([[features[feature] for feature in FEATURES]], columns=FEATURES)
 
     # Predict probabilities
     probabilities = model.predict_proba(X)[0]
@@ -101,11 +95,9 @@ def predict_differential(features):
     results = []
 
     for index in ranked_indices:
-
-        results.append({
-            "disease": classes[index],
-            "score": float(probabilities[index])
-        })
+        results.append(
+            {"disease": classes[index], "score": float(probabilities[index])}
+        )
 
     return results
 
@@ -115,7 +107,6 @@ def predict_differential(features):
 # ============================================================
 
 if __name__ == "__main__":
-
     test_case = {
         "shortness_of_breath": 1,
         "difficulty_breathing": 1,
@@ -142,7 +133,7 @@ if __name__ == "__main__":
         "fatigue": 0,
         "malaise": 0,
         "general_weakness": 0,
-        "vomiting": 0
+        "vomiting": 0,
     }
 
     results = predict_differential(test_case)
@@ -152,9 +143,4 @@ if __name__ == "__main__":
     print("=" * 60)
 
     for rank, result in enumerate(results[:5], start=1):
-
-        print(
-            f"{rank}. "
-            f"{result['disease']} "
-            f"({result['score']:.4f})"
-        )
+        print(f"{rank}. {result['disease']} ({result['score']:.4f})")

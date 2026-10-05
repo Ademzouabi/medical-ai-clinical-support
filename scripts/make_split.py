@@ -1,13 +1,15 @@
 import pandas as pd  # Import pandas so we can work with tabular CSV data using DataFrames.
+from pathlib import Path
 from sklearn.model_selection import (
     GroupShuffleSplit,
 )  # Import GroupShuffleSplit to split data while keeping identical symptom vectors in the same group.
 
-INPUT_FILE = "v1_standardized.csv"  # Path to the cleaned standard dataset that will be split into train/validation/test.
+DATA_DIR = Path(__file__).resolve().parents[1] / "data" / "processed"
+INPUT_FILE = DATA_DIR / "v1_standardized.csv"
 
-TRAIN_FILE = "v1_train.csv"  # Output filename for the training split.
-VAL_FILE = "v1_validation.csv"  # Output filename for the validation split.
-TEST_FILE = "v1_test.csv"  # Output filename for the test split.
+TRAIN_FILE = DATA_DIR / "v1_train.csv"
+VAL_FILE = DATA_DIR / "v1_validation.csv"
+TEST_FILE = DATA_DIR / "v1_test.csv"
 
 
 # Load standardized dataset  # Read the cleaned dataset into a DataFrame so we can split it.

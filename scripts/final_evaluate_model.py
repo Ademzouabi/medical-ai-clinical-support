@@ -1,5 +1,6 @@
 import pandas as pd
 import joblib
+from pathlib import Path
 
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import (
@@ -14,9 +15,11 @@ from sklearn.metrics import (
 # 1. Load datasets
 # ============================================================
 
-train = pd.read_csv("v1_train.csv")
-validation = pd.read_csv("v1_validation.csv")
-test = pd.read_csv("v1_test.csv")
+PROJECT_DIR = Path(__file__).resolve().parents[1]
+DATA_DIR = PROJECT_DIR / "data" / "processed"
+train = pd.read_csv(DATA_DIR / "v1_train.csv")
+validation = pd.read_csv(DATA_DIR / "v1_validation.csv")
+test = pd.read_csv(DATA_DIR / "v1_test.csv")
 
 
 # ============================================================
@@ -208,7 +211,7 @@ print(cm_df)
 # 11. Save the final model
 # ============================================================
 
-model_filename = "final_logistic_regression.pkl"
+model_filename = PROJECT_DIR / "models" / "final_logistic_regression.pkl"
 
 joblib.dump(
     model,
@@ -235,8 +238,8 @@ test_results["predicted_disease"] = predictions
 test_results["prediction_confidence"] = probabilities.max(axis=1)
 
 test_results.to_csv(
-    "final_test_predictions.csv",
+    PROJECT_DIR / "data" / "evaluation" / "final_test_predictions.csv",
     index=False
 )
 
-print("Test predictions saved as: final_test_predictions.csv")
+print("Test predictions saved as: data/evaluation/final_test_predictions.csv")

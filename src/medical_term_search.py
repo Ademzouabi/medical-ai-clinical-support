@@ -3,9 +3,19 @@ import re
 from pathlib import Path
 
 
+BASE_DIR = Path(__file__).resolve().parent
+DEFAULT_TERMINOLOGY_FILE = (
+    BASE_DIR.parent / "data" / "terminology" / "terminology_v1.json"
+)
+
+
 class MedicalTermSearch:
-    def __init__(self, terminology_file="terminology_v1.json"):
-        self.terminology_file = Path(terminology_file)
+    def __init__(self, terminology_file=None):
+        self.terminology_file = (
+            Path(terminology_file)
+            if terminology_file is not None
+            else DEFAULT_TERMINOLOGY_FILE
+        )
         self.concepts = self._load_terminology()
         self.search_index = self._build_search_index()
 

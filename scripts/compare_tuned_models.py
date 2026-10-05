@@ -1,4 +1,5 @@
 import pandas as pd
+from pathlib import Path
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import (
@@ -13,8 +14,9 @@ from sklearn.metrics import (
 # 1. Load data
 # ============================================================
 
-train = pd.read_csv("v1_train.csv")
-validation = pd.read_csv("v1_validation.csv")
+DATA_DIR = Path(__file__).resolve().parents[1] / "data" / "processed"
+train = pd.read_csv(DATA_DIR / "v1_train.csv")
+validation = pd.read_csv(DATA_DIR / "v1_validation.csv")
 
 X_train = train.drop(columns=["disease"])
 y_train = train["disease"]

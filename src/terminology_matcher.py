@@ -8,7 +8,8 @@ from pathlib import Path
 # ============================================================
 
 BASE_DIR = Path(__file__).resolve().parent
-TERMINOLOGY_FILE = BASE_DIR / "terminology_v1.json"
+PROJECT_DIR = BASE_DIR.parent
+TERMINOLOGY_FILE = PROJECT_DIR / "data" / "terminology" / "terminology_v1.json"
 
 
 # Features expected by the ML layer
@@ -118,6 +119,7 @@ def normalize_text(text):
         return ""
 
     text = str(text).lower().strip()
+    text = text.replace("\u2018", "'").replace("\u2019", "'")
 
     # Expand common contractions
     contractions = {
@@ -263,7 +265,8 @@ def split_sentences(text):
     Keep sentence boundaries because contradictions and
     corrections can occur across sentences.
     """
-    return [part.strip() for part in re.split(r"[.!?]+", text) if part.strip()]
+    parts = re.findall(r"[^.!?]+(?:[.!?]+|$)", text)
+    return [part.strip() for part in parts if part.strip()]
 
 
 def split_clauses(sentence):
@@ -302,7 +305,7 @@ def split_assertion_segments(clause):
     """
 
     parts = re.split(
-        r",\s*(?="
+        r"(?:,\s*|\s+\band\s+)(?="
         r"no\b"
         r"|without\b"
         r"|denies?\b"
@@ -331,7 +334,11 @@ def split_assertion_segments(clause):
         flags=re.IGNORECASE,
     )
 
-    parts = [part.strip(" ,") for part in parts if part.strip(" ,")]
+    parts = [
+        re.sub(r"^and\s+", "", part, flags=re.IGNORECASE).strip(" ,")
+        for part in parts
+        if part.strip(" ,")
+    ]
 
     # Re-attach trailing context that contains no medical concept.
     #
@@ -362,6 +369,7 @@ def split_assertion_segments(clause):
 
 UNCERTAINTY_PATTERNS = [
     r"\bnot sure\b",
+    r"\bnot certain\b",
     r"\bunsure\b",
     r"\buncertain\b",
     r"\bmaybe\b",
@@ -534,10 +542,6 @@ def status_for_segment(segment, concept_id):
     if not normalized:
         return None
 
-    # Questions are intentionally conservative.
-    if segment.strip().endswith("?"):
-        return "UNKNOWN"
-
     # If this is explicitly somebody else's statement,
     # do not assign it to the user.
     if is_other_person_statement(normalized):
@@ -547,6 +551,10 @@ def status_for_segment(segment, concept_id):
     # current self-report.
     if is_doctor_report(normalized):
         return None
+
+    # Questions are intentionally conservative.
+    if segment.strip().endswith("?"):
+        return "UNKNOWN"
 
     # Find the concept phrase position when possible.
     concept_phrases = []
@@ -627,6 +635,7 @@ def status_for_segment(segment, concept_id):
         r"\bare not$",
         r"\bwas not$",
         r"\bwere not$",
+        r"\bam not$",
     ]
 
     if contains_pattern(before, local_negation_patterns):
@@ -762,36 +771,35 @@ def match_concepts(text):
         # Explicit contradiction = UNKNOWN unless later evidence
         # explicitly corrects the earlier statement.
         if "YES" in statuses and "NO" in statuses:
-            corrected = False
-            positive_evidence = [item for item in evidence if item["status"] == "YES"]
+            corrected_status = None
 
-            for item in positive_evidence:
+            for item in evidence:
                 segment = normalize_fragment(item["segment"])
 
-                correction_markers = [
-                    r"\bnow\b",
-                    r"\bcurrently\b",
-                    r"\bactually\b",
-                    r"\bbut i have\b",
-                    r"\bbut i do have\b",
-                    r"\bbut i am\b",
-                    r"\bbut i feel\b",
-                    r"\bbut i get\b",
-                ]
+                if item["status"] == "YES":
+                    correction_markers = [
+                        r"\bnow\b",
+                        r"\bcurrently\b",
+                        r"\bactually\b",
+                        r"\bbut i have\b",
+                        r"\bbut i do have\b",
+                        r"\bbut i am\b",
+                        r"\bbut i feel\b",
+                        r"\bbut i get\b",
+                    ]
+                    candidate_status = "YES"
+                else:
+                    correction_markers = [r"\bnow\b", r"\bcurrently\b"]
+                    candidate_status = "NO"
 
-                if any(
-                    re.search(
-                        marker,
-                        segment,
-                        re.IGNORECASE,
-                    )
-                    for marker in correction_markers
-                ):
-                    corrected = True
-                    break
+                if any(re.search(marker, segment) for marker in correction_markers):
+                    if corrected_status is None:
+                        corrected_status = candidate_status
+                    elif corrected_status != candidate_status:
+                        corrected_status = "UNKNOWN"
 
-            if corrected:
-                final_status = "YES"
+            if corrected_status in {"YES", "NO"}:
+                final_status = corrected_status
             else:
                 # Genuine unresolved contradiction.
                 #
@@ -856,6 +864,7 @@ def concepts_to_features(matches):
     features = {feature: None for feature in ML_FEATURES}
 
     feature_sources = {feature: [] for feature in ML_FEATURES}
+    statuses_by_feature = {feature: {} for feature in ML_FEATURES}
 
     for match in matches:
         concept_id = match.get("concept_id")
@@ -875,22 +884,48 @@ def concepts_to_features(matches):
                 continue
 
             feature_sources[feature_name].append(concept_id)
+            statuses_by_feature[feature_name][concept_id] = status
 
-            current = features[feature_name]
+    concepts_by_feature = {
+        feature: [
+            concept["concept_id"]
+            for concept in TERMINOLOGY
+            if feature in concept.get("ml_feature_mapping", {})
+        ]
+        for feature in ML_FEATURES
+    }
 
-            if status == "YES":
-                # Positive evidence dominates.
+    for feature_name, concept_ids in concepts_by_feature.items():
+        if not concept_ids:
+            continue
+
+        statuses = [
+            statuses_by_feature[feature_name].get(concept_id, "UNKNOWN")
+            for concept_id in concept_ids
+        ]
+
+        if feature_name == "productive_cough":
+            direct_status = statuses_by_feature[feature_name].get(
+                "productive_cough",
+                "UNKNOWN",
+            )
+            proxy_status = statuses_by_feature[feature_name].get(
+                "chest_congestion_with_phlegm",
+                "UNKNOWN",
+            )
+
+            if direct_status == "YES":
                 features[feature_name] = 1
-
-            elif status == "NO":
-                # Do not overwrite an existing positive.
-                if current != 1:
-                    features[feature_name] = 0
-
-            elif status == "UNKNOWN":
-                # UNKNOWN only fills an empty state.
-                if current is None:
-                    features[feature_name] = None
+            elif direct_status == "NO" and proxy_status == "NO":
+                features[feature_name] = 0
+            else:
+                features[feature_name] = None
+        elif "YES" in statuses:
+            features[feature_name] = 1
+        elif all(status == "NO" for status in statuses):
+            features[feature_name] = 0
+        else:
+            features[feature_name] = None
 
     # Remove empty source lists for cleaner output.
     feature_sources = {

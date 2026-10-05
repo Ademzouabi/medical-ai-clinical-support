@@ -1,4 +1,5 @@
 import pandas as pd  # Import pandas to read the training CSV and manipulate DataFrames.
+from pathlib import Path
 from sklearn.linear_model import (
     LogisticRegression,
 )  # Import the logistic regression model to inspect learned feature weights.
@@ -8,7 +9,8 @@ from sklearn.linear_model import (
 # Load training data only
 # --------------------------------------------------
 
-train = pd.read_csv("v1_train.csv")  # Read only the training split from disk.
+DATA_DIR = Path(__file__).resolve().parents[1] / "data" / "processed"
+train = pd.read_csv(DATA_DIR / "v1_train.csv")  # Read only the training split from disk.
 
 X_train = train.drop(columns=["disease"])  # Keep all symptom columns as model inputs.
 y_train = train["disease"]  # Keep the disease label as the target variable.

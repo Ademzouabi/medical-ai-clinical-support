@@ -1,4 +1,5 @@
 import pandas as pd  # Import pandas to load the split data and summarize the tuning results.
+from pathlib import Path
 from sklearn.linear_model import (
     LogisticRegression,
 )  # Import logistic regression for the C-value grid search.
@@ -9,8 +10,9 @@ from sklearn.metrics import (
 
 
 # Load data  # Read the training and validation sets from their CSV files.
-train = pd.read_csv("v1_train.csv")  # Load the training set.
-validation = pd.read_csv("v1_validation.csv")  # Load the validation set.
+DATA_DIR = Path(__file__).resolve().parents[1] / "data" / "processed"
+train = pd.read_csv(DATA_DIR / "v1_train.csv")  # Load the training set.
+validation = pd.read_csv(DATA_DIR / "v1_validation.csv")  # Load the validation set.
 
 X_train = train.drop(
     columns=["disease"]

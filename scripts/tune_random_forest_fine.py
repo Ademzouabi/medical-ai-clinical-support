@@ -1,4 +1,5 @@
 import pandas as pd  # Import pandas to read the CSV files and organize the tuning results.
+from pathlib import Path
 from sklearn.ensemble import (
     RandomForestClassifier,
 )  # Import the random forest model for the depth and leaf-size tuning grid.
@@ -9,8 +10,9 @@ from sklearn.metrics import (
 
 
 # Load data  # Read the training and validation splits from their CSV files.
-train = pd.read_csv("v1_train.csv")  # Load the training set.
-validation = pd.read_csv("v1_validation.csv")  # Load the validation set.
+DATA_DIR = Path(__file__).resolve().parents[1] / "data" / "processed"
+train = pd.read_csv(DATA_DIR / "v1_train.csv")  # Load the training set.
+validation = pd.read_csv(DATA_DIR / "v1_validation.csv")  # Load the validation set.
 
 X_train = train.drop(
     columns=["disease"]

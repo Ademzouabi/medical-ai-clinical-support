@@ -1,4 +1,5 @@
 import pandas as pd  # Import pandas to read CSV data and store evaluation results in a DataFrame.
+from pathlib import Path
 from sklearn.linear_model import (
     LogisticRegression,
 )  # Import the logistic regression model used for tuning.
@@ -12,9 +13,10 @@ from sklearn.metrics import (
 # Load data
 # --------------------------------------------------
 
-train = pd.read_csv("v1_train.csv")  # Read the training split from the CSV file.
+DATA_DIR = Path(__file__).resolve().parents[1] / "data" / "processed"
+train = pd.read_csv(DATA_DIR / "v1_train.csv")  # Read the training split from the CSV file.
 validation = pd.read_csv(
-    "v1_validation.csv"
+    DATA_DIR / "v1_validation.csv"
 )  # Read the validation split from the CSV file.
 
 X_train = train.drop(

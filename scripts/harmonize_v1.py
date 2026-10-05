@@ -1,9 +1,9 @@
 import pandas as pd  # Import the pandas library so we can read and manipulate CSV data in a DataFrame.
+from pathlib import Path
 
-INPUT_FILE = "Final_Augmented_dataset_Diseases_and_Symptoms.csv\\Final_Augmented_dataset_Diseases_and_Symptoms.csv"  # Name of the source dataset file to read.
-OUTPUT_FILE = (
-    "v1_standardized.csv"  # Name of the cleaned output CSV file that will be created.
-)
+PROJECT_DIR = Path(__file__).resolve().parents[1]
+INPUT_FILE = PROJECT_DIR / "data" / "raw" / "Final_Augmented_dataset_Diseases_and_Symptoms.csv" / "Final_Augmented_dataset_Diseases_and_Symptoms.csv"
+OUTPUT_FILE = PROJECT_DIR / "data" / "processed" / "v1_standardized.csv"
 
 
 # 1. Diseases included in V1  # This section defines the subset of diseases we want to keep in the final version.

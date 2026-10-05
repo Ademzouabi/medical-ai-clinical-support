@@ -1,4 +1,5 @@
 import pandas as pd  # Import pandas to load data and display evaluation tables.
+from pathlib import Path
 from sklearn.ensemble import (
     RandomForestClassifier,
 )  # Import the random forest model for tuning experiments.
@@ -12,8 +13,9 @@ from sklearn.metrics import (
 # Load data
 # --------------------------------------------------
 
-train = pd.read_csv("v1_train.csv")  # Load the training split.
-validation = pd.read_csv("v1_validation.csv")  # Load the validation split.
+DATA_DIR = Path(__file__).resolve().parents[1] / "data" / "processed"
+train = pd.read_csv(DATA_DIR / "v1_train.csv")  # Load the training split.
+validation = pd.read_csv(DATA_DIR / "v1_validation.csv")  # Load the validation split.
 
 X_train = train.drop(
     columns=["disease"]
