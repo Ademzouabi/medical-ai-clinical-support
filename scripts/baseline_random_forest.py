@@ -1,3 +1,5 @@
+"""Train and report a Random Forest baseline on the V1 processed datasets."""
+
 import pandas as pd  # Import pandas to read CSV files and handle tabular data.
 from pathlib import Path
 

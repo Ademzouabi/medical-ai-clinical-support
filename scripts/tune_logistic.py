@@ -1,3 +1,5 @@
+"""Evaluate a coarse Logistic Regression hyperparameter search on validation data."""
+
 import pandas as pd  # Import pandas to read CSV data and store evaluation results in a DataFrame.
 from pathlib import Path
 from sklearn.linear_model import (

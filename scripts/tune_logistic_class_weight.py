@@ -1,3 +1,5 @@
+"""Compare Logistic Regression class-weight settings on validation data."""
+
 import pandas as pd  # Import pandas to read the split CSV files and store results in a table.
 from pathlib import Path
 from sklearn.linear_model import (

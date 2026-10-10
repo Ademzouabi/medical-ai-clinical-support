@@ -1,11 +1,15 @@
+"""Select deterministic terminology concepts from user-facing search results."""
+
 from medical_term_search import MedicalTermSearch
 
 
 class ConceptSelector:
     def __init__(self, search_engine):
+        # Dependency injection keeps this console helper independent of one search implementation.
         self.search_engine = search_engine
 
     def select(self, query):
+        # Search returns dictionaries; this helper turns a human choice into one concept ID.
         results = self.search_engine.search(query)
 
         if not results:
@@ -22,6 +26,7 @@ class ConceptSelector:
             )
 
         while True:
+            # Keep asking because terminal input is untrusted free-form text.
             choice = input("\nSelect a concept number (0 to cancel): ").strip()
 
             if choice == "0":
@@ -34,6 +39,7 @@ class ConceptSelector:
             choice = int(choice)
 
             if 1 <= choice <= len(results):
+                # Lists are zero-indexed, while the displayed menu begins at one.
                 selected = results[choice - 1]
 
                 print(
@@ -51,6 +57,7 @@ class ConceptSelector:
 
 
 if __name__ == "__main__":
+    # This block runs only when the file is executed directly, not when imported.
     search_engine = MedicalTermSearch()
     selector = ConceptSelector(search_engine)
 

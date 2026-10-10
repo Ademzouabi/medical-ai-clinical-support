@@ -1,3 +1,5 @@
+"""Evaluate a coarse Random Forest hyperparameter search on validation data."""
+
 import pandas as pd  # Import pandas to load data and display evaluation tables.
 from pathlib import Path
 from sklearn.ensemble import (

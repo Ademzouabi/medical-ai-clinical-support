@@ -1,3 +1,5 @@
+"""Normalize clinical text into deterministic concepts and V1 feature states."""
+
 import json
 import re
 from pathlib import Path
@@ -9,6 +11,7 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent
 PROJECT_DIR = BASE_DIR.parent
+# This file-relative path keeps terminology loading independent of the shell working directory.
 TERMINOLOGY_FILE = PROJECT_DIR / "data" / "terminology" / "terminology_v1.json"
 
 
@@ -115,6 +118,7 @@ def normalize_text(text):
     Normalize text while preserving punctuation needed for
     sentence/clause reasoning.
     """
+    # Treat missing input as empty input so callers receive no matches rather than a TypeError.
     if text is None:
         return ""
 
@@ -145,6 +149,7 @@ def normalize_text(text):
         "there's": "there is",
     }
 
+    # Expanding contractions makes later negation rules see a consistent vocabulary.
     for contraction, replacement in contractions.items():
         text = re.sub(
             rf"\b{re.escape(contraction)}\b",
@@ -173,6 +178,7 @@ def normalize_fragment(text):
 
 
 def load_terminology():
+    # Support either the current list format or a future wrapper with a "concepts" key.
     with open(TERMINOLOGY_FILE, "r", encoding="utf-8") as file:
         data = json.load(file)
 
@@ -186,6 +192,7 @@ def load_terminology():
     return concepts
 
 
+# Load once at import time because matching repeatedly uses the same static V1 vocabulary.
 TERMINOLOGY = load_terminology()
 
 
@@ -201,6 +208,7 @@ def build_phrase_index():
 
     index = {}
 
+    # One phrase may point to multiple concepts, so index values are sets rather than one ID.
     for concept in TERMINOLOGY:
         concept_id = concept.get("concept_id")
 
@@ -249,6 +257,7 @@ SORTED_PHRASES = sorted(
 
 
 def get_feature_mapping(concept_id):
+    # The terminology file, rather than matcher code, defines concept-to-feature relationships.
     for concept in TERMINOLOGY:
         if concept.get("concept_id") == concept_id:
             return concept.get("ml_feature_mapping", {})
@@ -518,12 +527,14 @@ def find_concepts(text):
 
     found = []
 
+    # Specific multi-word phrases are checked first to avoid premature shorter matches.
     for phrase in SORTED_PHRASES:
         pattern = rf"\b{re.escape(phrase)}\b"
 
         if re.search(pattern, normalized):
             found.extend(PHRASE_INDEX[phrase])
 
+    # dict preserves insertion order, providing stable de-duplication without a separate set order.
     return list(dict.fromkeys(found))
 
 
@@ -724,6 +735,7 @@ def match_concepts(text):
         return []
 
     # concept_id -> list of observed statuses
+    # Retain all evidence first; final status is decided only after contradictions are visible.
     observations = {}
 
     sentences = split_sentences(text)
@@ -861,6 +873,7 @@ def concepts_to_features(matches):
         }
     """
 
+    # None represents unresolved information and must remain distinct from binary absence (0).
     features = {feature: None for feature in ML_FEATURES}
 
     feature_sources = {feature: [] for feature in ML_FEATURES}
@@ -886,6 +899,7 @@ def concepts_to_features(matches):
             feature_sources[feature_name].append(concept_id)
             statuses_by_feature[feature_name][concept_id] = status
 
+    # Build reverse relationships so a shared feature can consider every concept that affects it.
     concepts_by_feature = {
         feature: [
             concept["concept_id"]
@@ -905,6 +919,7 @@ def concepts_to_features(matches):
         ]
 
         if feature_name == "productive_cough":
+            # Proxy evidence alone must never create a positive productive-cough feature.
             direct_status = statuses_by_feature[feature_name].get(
                 "productive_cough",
                 "UNKNOWN",
@@ -952,6 +967,7 @@ def normalize_clinical_text(text):
         }
     """
 
+    # This convenience function preserves the intermediate artifacts useful to callers and tests.
     matches = match_concepts(text)
 
     features, feature_sources = concepts_to_features(matches)

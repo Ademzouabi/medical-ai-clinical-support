@@ -16,11 +16,13 @@ class ClarificationUnavailableError(RuntimeError):
 
 @dataclass
 class PipelineSession:
+    # The session owns clarification state and caches the one prediction result once produced.
     clarification: object
     prediction_result: object = None
 
     @property
     def original_text(self):
+        # Expose the original user input without duplicating it in two session objects.
         return self.clarification.original_text
 
 
@@ -31,6 +33,7 @@ def start_pipeline(text):
 
 
 def _binary_feature_vector(features):
+    # The model contract requires all three conditions: count, canonical order, and binary values.
     return (
         len(features) == 26
         and tuple(features) == tuple(ML_FEATURES)
@@ -51,6 +54,7 @@ def get_current_state(session):
     feature_states = session.clarification.feature_states()
     unresolved_concepts = session.clarification.unresolved_concepts()
 
+    # Return plain dictionaries/lists because the API layer must serialize this state as JSON.
     return {
         "original_text": session.original_text,
         "concept_matches": concept_matches,
@@ -70,6 +74,7 @@ def submit_clarification(session, answer):
     if session.prediction_result is not None:
         raise RuntimeError("Prediction has already been produced for this session.")
 
+    # The deterministic clarification layer—not this function—decides which concept is next.
     question = session.clarification.next_question()
     if question is None:
         raise ClarificationUnavailableError(
@@ -83,6 +88,7 @@ def submit_clarification(session, answer):
 def predict(session):
     """Call the existing predictor only after all 26 features are binary."""
 
+    # Reuse an existing result so one session cannot accidentally run the model twice.
     if session.prediction_result is not None:
         return session.prediction_result
 
@@ -98,6 +104,7 @@ def predict(session):
     if tuple(FEATURES) != tuple(ML_FEATURES):
         raise RuntimeError("Matcher and prediction feature orders do not match.")
 
+    # Rebuild the dictionary in predictor order even if another mapping implementation changes.
     ordered_features = {feature: feature_states[feature] for feature in FEATURES}
     session.prediction_result = predict_differential(ordered_features)
     return session.prediction_result

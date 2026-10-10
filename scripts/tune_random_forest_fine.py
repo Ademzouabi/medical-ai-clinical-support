@@ -1,3 +1,5 @@
+"""Run a fine-grained Random Forest hyperparameter search on validation data."""
+
 import pandas as pd  # Import pandas to read the CSV files and organize the tuning results.
 from pathlib import Path
 from sklearn.ensemble import (

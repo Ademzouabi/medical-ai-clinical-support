@@ -1,3 +1,5 @@
+"""End-to-end tests from clinical text through gating to real model inference."""
+
 import json
 import math
 import os
@@ -9,6 +11,7 @@ import unittest
 from unittest.mock import Mock, patch
 
 PROJECT_DIR = Path(__file__).resolve().parents[1]
+# End-to-end tests use the real source tree and model artifact, not an installed package.
 sys.path.insert(0, str(PROJECT_DIR / "src"))
 
 import predict
@@ -24,12 +27,14 @@ from terminology_matcher import ML_FEATURES, TERMINOLOGY
 
 
 MAPPED_CONCEPTS = [
+    # Only concepts with mappings can contribute to the final 26-feature model contract.
     concept for concept in TERMINOLOGY if concept.get("ml_feature_mapping")
 ]
 MAPPED_IDS = {concept["concept_id"] for concept in MAPPED_CONCEPTS}
 
 
 def evidence_text(status):
+    # Build deterministic fully positive or fully negative clinical text from real vocabulary.
     if status == "YES":
         prefix = "Currently, I have "
     elif status == "NO":
@@ -42,11 +47,13 @@ def evidence_text(status):
 
 
 def prediction_stub():
+    # Use this only where a test needs to prove blocking without invoking the real model.
     return Mock(return_value=[{"disease": "stub", "score": 0.5}])
 
 
 class EndToEndTests(unittest.TestCase):
     def test_complete_positive_text_runs_real_prediction(self):
+        # This is the highest-level happy path: text through matcher, gate, and real model.
         session = start_pipeline(evidence_text("YES"))
         state = get_current_state(session)
         matches = {
@@ -82,6 +89,7 @@ class EndToEndTests(unittest.TestCase):
         self.assertEqual(get_current_state(session)["prediction_result"], result)
 
     def test_complete_negative_text_resolves_every_feature_to_zero(self):
+        # Explicit denials should become zeros only when all relevant evidence is explicit.
         session = start_pipeline(evidence_text("NO"))
         state = get_current_state(session)
         matches = {
@@ -101,6 +109,7 @@ class EndToEndTests(unittest.TestCase):
         self.assertTrue(all(value == 0 for value in stub.call_args.args[0].values()))
 
     def test_partial_information_blocks_and_never_calls_model(self):
+        # A single known symptom is insufficient because all 26 model inputs are required.
         session = start_pipeline("I have a cough.")
         state = get_current_state(session)
         matches = {
@@ -118,6 +127,7 @@ class EndToEndTests(unittest.TestCase):
         stub.assert_not_called()
 
     def test_ambiguous_language_remains_unknown(self):
+        # Ambiguity is deliberately preserved instead of being coerced into YES or NO.
         cases = (
             ("I might have a fever.", "fever"),
             ("I think I'm short of breath.", "shortness_of_breath"),

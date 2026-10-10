@@ -22,8 +22,10 @@ from pipeline import (
 
 logger = logging.getLogger(__name__)
 
+# The API is deliberately a thin transport layer; pipeline.py retains business logic.
 app = FastAPI(title="Clinical AI V1 API", version="1.0.0")
 
+# Allow a local browser client to call this development API from another origin.
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -39,6 +41,7 @@ app.add_middleware(
 
 
 class CreateSessionRequest(BaseModel):
+    # Pydantic validates this JSON body before the route function receives it.
     text: str
 
 
@@ -46,10 +49,12 @@ class SubmitAnswerRequest(BaseModel):
     answer: str
 
 
+# V1 keeps sessions only in process memory; restarting the server discards them.
 sessions: dict[str, Any] = {}
 
 
 def _session_or_404(session_id: str) -> Any:
+    # Centralize missing-session behavior so every route returns the same 404 contract.
     try:
         return sessions[session_id]
     except KeyError as error:
@@ -60,6 +65,7 @@ def _session_or_404(session_id: str) -> Any:
 
 
 def _state_response(session_id: str, session: Any) -> dict[str, Any]:
+    # Add transport identity without duplicating pipeline state-building logic.
     return {"session_id": session_id, **get_current_state(session)}
 
 
@@ -67,6 +73,7 @@ def _state_response(session_id: str, session: Any) -> dict[str, Any]:
 async def unexpected_error_handler(request: Request, error: Exception) -> JSONResponse:
     """Keep unanticipated server errors out of the client response."""
 
+    # Log technical details on the server while returning a safe generic client message.
     logger.exception("Unhandled API error for %s", request.url.path)
     return JSONResponse(
         status_code=500,
@@ -83,6 +90,7 @@ async def unexpected_error_handler(request: Request, error: Exception) -> JSONRe
 def create_session(payload: CreateSessionRequest) -> dict[str, Any]:
     """Create a server-side pipeline session from clinical text."""
 
+    # UUIDs avoid exposing predictable sequential identifiers to API callers.
     session_id = str(uuid4())
     session = start_pipeline(payload.text)
     sessions[session_id] = session
@@ -101,6 +109,7 @@ def answer_session(session_id: str, payload: SubmitAnswerRequest) -> dict[str, A
     """Submit one clarification answer through the existing pipeline."""
 
     session = _session_or_404(session_id)
+    # Pipeline exceptions become HTTP conflict responses instead of uncaught server errors.
     try:
         submit_clarification(session, payload.answer)
     except (ClarificationUnavailableError, RuntimeError) as error:
@@ -116,6 +125,7 @@ def predict_session(session_id: str) -> dict[str, Any]:
     """Run the existing prediction function only after its binary gate opens."""
 
     session = _session_or_404(session_id)
+    # Never let an incomplete or UNKNOWN feature vector reach the trained model.
     if not can_predict(session):
         raise HTTPException(
             status_code=409,

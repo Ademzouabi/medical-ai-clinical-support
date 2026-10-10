@@ -1,3 +1,5 @@
+"""Train the final V1 model and evaluate it once on the held-out test split."""
+
 import pandas as pd
 import joblib
 from pathlib import Path

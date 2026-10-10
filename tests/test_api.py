@@ -1,3 +1,5 @@
+"""Integration tests for the FastAPI transport layer and pipeline session contract."""
+
 from pathlib import Path
 import sys
 import unittest
@@ -6,6 +8,7 @@ from fastapi.testclient import TestClient
 
 
 PROJECT_DIR = Path(__file__).resolve().parents[1]
+# Tests import runtime modules directly from src without requiring package installation.
 sys.path.insert(0, str(PROJECT_DIR / "src"))
 
 import api
@@ -13,6 +16,7 @@ from terminology_matcher import TERMINOLOGY
 
 
 def complete_positive_text():
+    # Build explicit evidence from the actual terminology instead of hardcoding 26 terms.
     return " ".join(
         f"Currently, I have {concept['preferred_term']}."
         for concept in TERMINOLOGY
@@ -22,10 +26,12 @@ def complete_positive_text():
 
 class ApiTests(unittest.TestCase):
     def setUp(self):
+        # Isolation matters because the API stores sessions in one module-level dictionary.
         api.sessions.clear()
         self.client = TestClient(api.app)
 
     def test_create_and_retrieve_session(self):
+        # Arrange/act: create a session, then retrieve the exact same server-side state.
         created = self.client.post("/sessions", json={"text": "I have a cough."})
 
         self.assertEqual(created.status_code, 201)
@@ -42,6 +48,7 @@ class ApiTests(unittest.TestCase):
         self.assertEqual(retrieved.json(), payload)
 
     def test_submit_clarification_answer_updates_existing_session(self):
+        # Start empty so the test can observe the first deterministic question and its update.
         created = self.client.post("/sessions", json={"text": ""}).json()
         session_id = created["session_id"]
         asked_concept = created["next_question"]["concept_id"]
@@ -63,6 +70,7 @@ class ApiTests(unittest.TestCase):
         self.assertNotEqual(state["next_question"]["concept_id"], asked_concept)
 
     def test_incomplete_prediction_is_rejected_without_result(self):
+        # A partial feature state must produce 409 rather than a model result.
         created = self.client.post("/sessions", json={"text": "I have fever."}).json()
 
         response = self.client.post(f"/sessions/{created['session_id']}/predict")
@@ -74,6 +82,7 @@ class ApiTests(unittest.TestCase):
         self.assertFalse(state["prediction_ready"])
 
     def test_complete_session_runs_real_prediction(self):
+        # This deliberately exercises the real serialized model through the HTTP boundary.
         created = self.client.post(
             "/sessions",
             json={"text": complete_positive_text()},
@@ -104,6 +113,7 @@ class ApiTests(unittest.TestCase):
         self.assertEqual(response.json()["detail"]["code"], "session_not_found")
 
     def test_invalid_request_bodies_are_rejected(self):
+        # FastAPI/Pydantic should reject missing or wrongly typed required fields with 422.
         missing_text = self.client.post("/sessions", json={})
         wrong_text_type = self.client.post("/sessions", json={"text": 123})
         created = self.client.post("/sessions", json={"text": ""}).json()

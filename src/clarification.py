@@ -16,17 +16,20 @@ from terminology_matcher import (
 )
 
 
+# One attempt prevents repeated questioning from silently turning uncertainty into a binary value.
 MAX_ATTEMPTS_PER_CONCEPT = 1
 
 
 @dataclass(frozen=True)
 class QuestionDefinition:
+    # `frozen=True` makes question metadata immutable after the startup definitions are built.
     concept_id: str
     question: str
     target_concept: str
     group: str
 
 
+# Tuple data keeps question group/order explicit before it is converted into dataclass instances.
 _QUESTION_DATA = (
     (
         "breathing",
@@ -149,6 +152,7 @@ _QUESTION_DATA = (
 
 _TERMINOLOGY_BY_ID = {concept["concept_id"]: concept for concept in TERMINOLOGY}
 
+# Keep only questions for concepts that actually map to model-relevant features.
 QUESTION_DEFINITIONS = tuple(
     QuestionDefinition(
         concept_id=concept_id,
@@ -225,10 +229,12 @@ _PAST_ONLY_PATTERNS = (
 
 
 def _normalized_answer(answer):
+    # Reuse matcher normalization so answer rules and text rules interpret punctuation consistently.
     return normalize_fragment(answer)
 
 
 def _corrected_polarity(normalized):
+    # A correction phrase can make the final explicit polarity more important than earlier wording.
     if not re.search(r"\b(?:actually|wait|correction)\b", normalized):
         return None
 
@@ -252,6 +258,7 @@ def _corrected_polarity(normalized):
 
 
 def _target_segment_status(concept_id, raw_answer):
+    # Inspect only clauses that name the asked concept; unrelated symptoms must not answer it.
     chunks = re.split(
         r"\s+\b(?:but|however|though)\b\s+|[.!?]+",
         normalize_text(raw_answer),
@@ -298,6 +305,7 @@ def interpret_answer(concept_id, raw_answer):
     if not normalized:
         return "UNKNOWN"
 
+    # Exact short answers are handled before the more expensive matcher-based fallback.
     if normalized in _YES_ANSWERS:
         return "YES"
 
@@ -313,6 +321,7 @@ def interpret_answer(concept_id, raw_answer):
     ):
         return "UNKNOWN"
 
+    # Past-only evidence is not evidence of a current feature, so it remains unresolved.
     has_past_reference = any(
         re.search(pattern, normalized) for pattern in _PAST_ONLY_PATTERNS
     )
@@ -362,6 +371,7 @@ def interpret_answer(concept_id, raw_answer):
 def get_feature_states(concept_matches):
     """Recompute feature states through the existing aggregation layer."""
 
+    # The matcher owns shared-feature aggregation; clarification must not duplicate that logic.
     features, _ = concepts_to_features(concept_matches)
     return features
 
@@ -386,6 +396,7 @@ def get_unresolved_concepts(concept_matches):
         if match.get("concept_id") in _MAPPED_CONCEPT_IDS
     }
 
+    # A concept is askable only when it is unknown and can still resolve an unknown feature.
     unresolved = []
     for definition in QUESTION_DEFINITIONS:
         concept_id = definition.concept_id
@@ -404,6 +415,7 @@ def get_unresolved_concepts(concept_matches):
 def get_next_question(concept_matches, history=()):
     """Select the first eligible question in deterministic group order."""
 
+    # Count previous prompts so the one-attempt limit is enforced per concept.
     attempts = {}
     for entry in history:
         concept_id = entry.get("concept_id")
@@ -418,6 +430,7 @@ def get_next_question(concept_matches, history=()):
 
 
 def _answer_evidence(concept_id, status):
+    # Convert a binary answer into explicit current-state text that the matcher can safely re-read.
     term = _TERMINOLOGY_BY_ID[concept_id]["preferred_term"].lower()
     if status == "YES":
         return f"I have {term} currently."
@@ -437,11 +450,13 @@ class ClarificationSession:
 
     def concept_matches(self):
         if self._concept_matches_cache is not None:
+            # Return copies so callers cannot mutate the cached internal matcher result.
             return [dict(match) for match in self._concept_matches_cache]
 
         original_matches = match_concepts(self.original_text)
         overrides = {}
         if self._answer_statements:
+            # Re-run the existing matcher over original text plus deterministic answer evidence.
             combined_text = ". ".join(
                 [self.original_text]
                 + [
@@ -477,6 +492,7 @@ class ClarificationSession:
         return get_unresolved_concepts(self.concept_matches())
 
     def next_question(self):
+        # API/UI callers receive plain JSON-compatible question data rather than a dataclass.
         definition = get_next_question(self.concept_matches(), self.history)
         if definition is None:
             return None
@@ -502,6 +518,7 @@ class ClarificationSession:
 
         status = interpret_answer(concept_id, raw_answer)
         definition = _QUESTION_BY_ID[concept_id]
+        # Preserve the raw answer and interpreted meaning for debugging and later state responses.
         self.history.append(
             {
                 "concept_id": concept_id,
@@ -520,6 +537,7 @@ class ClarificationSession:
         return status
 
     def prediction_ready(self):
+        # `None` (unknown) fails this check, so unresolved information cannot enable prediction.
         return all(value in (0, 1) for value in self.feature_states().values())
 
 

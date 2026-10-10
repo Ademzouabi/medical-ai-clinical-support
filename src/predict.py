@@ -1,3 +1,5 @@
+"""Load the locked V1 model and return ranked predictions for 26 binary features."""
+
 import joblib
 import pandas as pd
 from pathlib import Path
@@ -9,6 +11,7 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent
 PROJECT_DIR = BASE_DIR.parent
+# Keeping this path relative to source makes model loading work outside the project directory.
 MODEL_PATH = PROJECT_DIR / "models" / "final_logistic_regression.pkl"
 
 model = joblib.load(MODEL_PATH)
@@ -19,6 +22,7 @@ model = joblib.load(MODEL_PATH)
 # ============================================================
 
 FEATURES = [
+    # This ordering is part of the trained-model contract, not merely display order.
     "shortness_of_breath",
     "difficulty_breathing",
     "pain_with_breathing",
@@ -64,12 +68,14 @@ def predict_differential(features):
     """
 
     # Check that all features exist
+    # Presence validation prevents pandas from silently constructing an incomplete model row.
     missing_features = [feature for feature in FEATURES if feature not in features]
 
     if missing_features:
         raise ValueError(f"Missing features: {missing_features}")
 
     # Check values
+    # `None`, booleans, strings, and other values must not enter the binary model.
     invalid_features = {
         feature: features[feature]
         for feature in FEATURES
@@ -82,6 +88,7 @@ def predict_differential(features):
         )
 
     # Create dataframe in EXACT training feature order
+    # One row represents one clinical case, with columns aligned to training order.
     X = pd.DataFrame([[features[feature] for feature in FEATURES]], columns=FEATURES)
 
     # Predict probabilities
@@ -92,6 +99,7 @@ def predict_differential(features):
     # Sort from highest to lowest probability
     ranked_indices = probabilities.argsort()[::-1]
 
+    # Convert NumPy/scikit-learn values into JSON-friendly Python dictionaries.
     results = []
 
     for index in ranked_indices:
@@ -107,6 +115,7 @@ def predict_differential(features):
 # ============================================================
 
 if __name__ == "__main__":
+    # This manual example is separate from the production pipeline and bypasses text matching.
     test_case = {
         "shortness_of_breath": 1,
         "difficulty_breathing": 1,

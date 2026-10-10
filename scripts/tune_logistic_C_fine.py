@@ -1,3 +1,5 @@
+"""Run a fine-grained search over Logistic Regression regularization strength."""
+
 import pandas as pd  # Import pandas to load the split data and summarize the tuning results.
 from pathlib import Path
 from sklearn.linear_model import (

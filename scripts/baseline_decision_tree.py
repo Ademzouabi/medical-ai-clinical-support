@@ -1,20 +1,22 @@
-import pandas as pd  # Import pandas to read CSV files and handle tabular data.
-from pathlib import Path
+"""Train and report a Decision Tree baseline on the V1 processed datasets."""
 
-from sklearn.tree import DecisionTreeClassifier# Import the decision tree model for multi-class classification.
+import pandas as pd  # Import pandas to read CSV files and handle tabular data.
+from pathlib import Path  # Build paths relative to this script instead of the working directory.
+
+from sklearn.tree import DecisionTreeClassifier  # Import the multi-class decision-tree classifier.
 from sklearn.metrics import (
-    accuracy_score,
-    classification_report,
-    confusion_matrix,
+    accuracy_score,  # Measure the fraction of correctly predicted labels.
+    classification_report,  # Summarize per-class precision, recall, F1, and support.
+    confusion_matrix,  # Count true-versus-predicted class combinations.
 )  # Import metrics for evaluation.
 
 
 # Load data  # Read the train, validation, and test datasets from CSV files.
 
-DATA_DIR = Path(__file__).resolve().parents[1] / "data" / "processed"
+DATA_DIR = Path(__file__).resolve().parents[1] / "data" / "processed"  # Locate processed CSVs from the repository root.
 train = pd.read_csv(DATA_DIR / "v1_train.csv")  # Load the training split into a DataFrame.
 validation = pd.read_csv(
-DATA_DIR / "v1_validation.csv"
+    DATA_DIR / "v1_validation.csv"  # Load validation data that is separate from fitting data.
 )  # Load the validation split into a DataFrame.
 test = pd.read_csv(DATA_DIR / "v1_test.csv")  # Load the test split into a DataFrame.
 
@@ -40,7 +42,7 @@ y_test = test["disease"]  # Keep the disease label as the test target.
 # Create model  # Initialize the logistic regression classifier.
 
 model = DecisionTreeClassifier(
-    random_state=42
+    random_state=42  # Make tree construction reproducible across runs using the same data.
 )
 
 
@@ -48,7 +50,7 @@ model = DecisionTreeClassifier(
 
 model.fit(
     X_train, y_train
-)  # Train the logistic regression classifier using the training features and labels.
+)  # Train the decision tree using only training features and labels.
 
 
 # Validation evaluation  # Measure model performance on the validation set before the final test set.
@@ -108,31 +110,33 @@ print(cm_df)  # Display the confusion matrix in a tabular format.
 # Top-K evaluation
 # --------------------------------------------------
 
-probabilities = model.predict_proba(X_test)
+probabilities = model.predict_proba(X_test)  # Produce one score per disease class for each test row.
 
-classes = model.classes_
+classes = model.classes_  # Keep the class order paired with columns of the probability matrix.
 
 def top_k_accuracy(y_true, probabilities, classes, k):
-    correct = 0
+    """Return the fraction of true labels appearing among each row's k highest scores."""
 
-    for true_label, probs in zip(y_true, probabilities):
-        top_k_indices = probs.argsort()[-k:][::-1]
-        top_k_labels = classes[top_k_indices]
+    correct = 0  # Count test rows whose true disease appears in their top-k ranked labels.
 
-        if true_label in top_k_labels:
+    for true_label, probs in zip(y_true, probabilities):  # Pair each true label with its model scores.
+        top_k_indices = probs.argsort()[-k:][::-1]  # Sort score indices, retain k largest, then reverse to descending order.
+        top_k_labels = classes[top_k_indices]  # Convert selected probability-column indices into disease names.
+
+        if true_label in top_k_labels:  # Count this row when the true disease is one of the suggestions.
             correct += 1
 
-    return correct / len(y_true)
+    return correct / len(y_true)  # Divide successful rows by all evaluated rows to obtain an accuracy fraction.
 
 
 print("\n=== TOP-K TEST ACCURACY ===")
 
-for k in [1, 3, 5]:
+for k in [1, 3, 5]:  # Report strict top-1 plus broader top-3 and top-5 ranking accuracy.
     score = top_k_accuracy(
-        y_test,
-        probabilities,
-        classes,
-        k
+        y_test,  # Supply the known held-out disease labels.
+        probabilities,  # Supply the matching prediction-score rows.
+        classes,  # Supply the score-column-to-disease mapping.
+        k,  # Select how many of the highest-scoring diseases should count as a hit.
     )
 
-    print(f"Top-{k}: {score:.4f}")
+    print(f"Top-{k}: {score:.4f}")  # Format the resulting fraction to four decimal places.

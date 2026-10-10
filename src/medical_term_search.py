@@ -1,9 +1,12 @@
+"""Provide exact, prefix, and keyword search over the V1 terminology vocabulary."""
+
 import json
 import re
 from pathlib import Path
 
 
 BASE_DIR = Path(__file__).resolve().parent
+# Resolve runtime data from this file's location so the caller's working directory is irrelevant.
 DEFAULT_TERMINOLOGY_FILE = (
     BASE_DIR.parent / "data" / "terminology" / "terminology_v1.json"
 )
@@ -11,6 +14,7 @@ DEFAULT_TERMINOLOGY_FILE = (
 
 class MedicalTermSearch:
     def __init__(self, terminology_file=None):
+        # A caller may supply another vocabulary file; otherwise use the V1 runtime vocabulary.
         self.terminology_file = (
             Path(terminology_file)
             if terminology_file is not None
@@ -20,15 +24,18 @@ class MedicalTermSearch:
         self.search_index = self._build_search_index()
 
     def _load_terminology(self):
+        # JSON becomes a Python list of concept dictionaries used by later search steps.
         with open(self.terminology_file, "r", encoding="utf-8") as file:
             return json.load(file)
 
     def _normalize(self, text):
+        # Search comparison is intentionally case- and repeated-whitespace-insensitive.
         text = text.lower().strip()
         text = re.sub(r"\s+", " ", text)
         return text
 
     def _build_search_index(self):
+        # The index records every concept associated with each preferred term or synonym.
         index = {}
 
         for concept in self.concepts:
@@ -47,6 +54,7 @@ class MedicalTermSearch:
 
         return index
     def search(self, query):
+        # Score match types deterministically so callers receive stable result ordering.
         query = self._normalize(query)
 
         results = []
@@ -82,6 +90,7 @@ class MedicalTermSearch:
 
             # 4. Keyword match
             else:
+                # A multi-word query matches when all query words occur in one known term.
                 query_words = set(query.split())
 
                 all_terms = [preferred_term] + synonyms
@@ -103,12 +112,14 @@ class MedicalTermSearch:
                     "match_type": match_type
                 })
 
+        # Higher-confidence match categories appear before weaker keyword matches.
         results.sort(key=lambda result: result["score"], reverse=True)
 
         return results
 
 
 if __name__ == "__main__":
+    # Direct execution provides a small manual smoke test for the search utility.
     search = MedicalTermSearch()
 
     print("Loaded concepts:", len(search.concepts))

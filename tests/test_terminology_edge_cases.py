@@ -1,7 +1,10 @@
+"""Exploratory edge-case checks for terminology matching and feature aggregation."""
+
 from pathlib import Path
 import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+# The script prints raw matcher output so unusual language inputs can be inspected manually.
 
 from terminology_matcher import (
     normalize_clinical_text,
@@ -34,6 +37,7 @@ TEST_CASES = [
 
 
 def main():  # Run the edge-case test suite for terminology normalization.
+    # These cases are diagnostic examples rather than assertion-heavy unittest cases.
     print("TERMINOLOGY MATCHER EDGE-CASE TEST")  # Print the test title.
     print("=" * 80)  # Print a separator line.
 

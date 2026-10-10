@@ -1,3 +1,5 @@
+"""Fit the baseline Logistic Regression model and inspect learned coefficients."""
+
 import pandas as pd  # Import pandas to read the training CSV and manipulate DataFrames.
 from pathlib import Path
 from sklearn.linear_model import (

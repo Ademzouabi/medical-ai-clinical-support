@@ -1,9 +1,12 @@
+"""Unit tests for deterministic clarification questions, answers, and session state."""
+
 from itertools import product
 from pathlib import Path
 import sys
 import unittest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+# Clarification is imported from src so the tests exercise the module used by pipeline.py.
 
 from clarification import (
     MAX_ATTEMPTS_PER_CONCEPT,
@@ -19,6 +22,7 @@ from terminology_matcher import TERMINOLOGY, concepts_to_features, match_concept
 
 
 class ClarificationTests(unittest.TestCase):
+    # These tests protect normal deterministic question ordering and answer interpretation.
     def test_every_mapped_concept_has_one_question(self):
         mapped = {
             concept["concept_id"]
@@ -151,6 +155,7 @@ class ClarificationTests(unittest.TestCase):
 
 
 class ClarificationAdversarialTests(unittest.TestCase):
+    # These cases target ambiguity, temporal language, corrections, and attribution.
     def test_answer_interpretation_is_scoped_to_the_asked_concept(self):
         self.assertEqual(
             interpret_answer("fever", "No cough, but yes fever."),

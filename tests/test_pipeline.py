@@ -1,3 +1,5 @@
+"""Unit tests for pipeline orchestration, readiness gating, and feature ordering."""
+
 import importlib.util
 import os
 import sys
@@ -8,6 +10,7 @@ from unittest.mock import Mock, patch
 from pathlib import Path
 
 PROJECT_DIR = Path(__file__).resolve().parents[1]
+# Make source modules importable when unittest runs this file from the repository root.
 sys.path.insert(0, str(PROJECT_DIR / "src"))
 
 from clarification import get_feature_states
@@ -23,6 +26,7 @@ from pipeline import (
 
 
 def complete_evidence_text():
+    # Generate a complete positive case from terminology mappings to avoid drift in test data.
     return " ".join(
         f"I have {concept['preferred_term']}."
         for concept in TERMINOLOGY
@@ -31,6 +35,7 @@ def complete_evidence_text():
 
 
 def prediction_stub(result=None):
+    # A lightweight fake module lets gate tests prove whether model inference was called.
     stub = ModuleType("predict")
     stub.FEATURES = list(ML_FEATURES)
     stub.predict_differential = Mock(return_value=result)
@@ -52,6 +57,7 @@ class PipelineTests(unittest.TestCase):
         self.assertFalse(can_predict(session))
 
     def test_unknown_blocks_prediction_without_loading_prediction_module(self):
+        # Injecting a stub proves that an UNKNOWN state stops before predictor invocation.
         session = start_pipeline("I am unsure about fever.")
         stub = prediction_stub([{"disease": "unused", "score": 0.0}])
 
@@ -63,6 +69,7 @@ class PipelineTests(unittest.TestCase):
         self.assertIsNone(session.prediction_result)
 
     def test_complete_synthetic_evidence_opens_gate(self):
+        # A full explicit case is the counterpart to the incomplete blocking test.
         session = start_pipeline(complete_evidence_text())
         state = get_current_state(session)
 
@@ -78,6 +85,7 @@ class PipelineTests(unittest.TestCase):
         )
 
     def test_refusal_keeps_unknown_and_blocks_prediction(self):
+        # Refusal is semantically UNKNOWN, not implicit absence.
         session = start_pipeline("")
         question = get_current_state(session)["next_question"]
 

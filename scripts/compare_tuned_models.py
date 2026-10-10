@@ -1,3 +1,5 @@
+"""Compare selected tuned classifiers against the V1 validation data."""
+
 import pandas as pd
 from pathlib import Path
 from sklearn.linear_model import LogisticRegression

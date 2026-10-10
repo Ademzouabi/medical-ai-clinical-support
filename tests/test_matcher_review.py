@@ -1,8 +1,11 @@
+"""Adversarial regression tests for V1 terminology-matcher semantics."""
+
 from itertools import product
 from pathlib import Path
 import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+# This standalone regression harness imports the real deterministic matcher implementation.
 
 from terminology_matcher import match_concepts, concepts_to_features
 
@@ -1150,6 +1153,7 @@ for productive_cough_statuses in product(STATUS_VALUES, repeat=2):
 
 
 def run_test(test_number, test_case):
+    # Compare one natural-language case against expected concept statuses and feature values.
     text = test_case["text"]
     expected = test_case["expected"]
 
@@ -1230,6 +1234,7 @@ def run_test(test_number, test_case):
 
 
 def run_aggregation_test(test_number, test_case):
+    # Shared-feature combinations are tested separately from sentence-level matching.
     features, _ = concepts_to_features(test_case["matches"])
     actual = features.get(test_case["feature"])
 
@@ -1246,6 +1251,7 @@ def run_aggregation_test(test_number, test_case):
 
 
 def main():
+    # Keep the large adversarial corpus executable without requiring unittest boilerplate.
     print("=" * 70)
     print("TERMINOLOGY MATCHER ADVERSARIAL REGRESSION TEST")
     print("=" * 70)

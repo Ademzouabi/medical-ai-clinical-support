@@ -1,3 +1,5 @@
+"""Create grouped V1 train, validation, and test CSV splits without vector leakage."""
+
 import pandas as pd  # Import pandas so we can work with tabular CSV data using DataFrames.
 from pathlib import Path
 from sklearn.model_selection import (

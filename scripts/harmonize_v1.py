@@ -1,3 +1,5 @@
+"""Convert selected raw-data columns into the canonical V1 feature dataset."""
+
 import pandas as pd  # Import the pandas library so we can read and manipulate CSV data in a DataFrame.
 from pathlib import Path
 
