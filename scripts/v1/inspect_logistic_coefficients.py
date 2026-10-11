@@ -11,7 +11,7 @@ from sklearn.linear_model import (
 # Load training data only
 # --------------------------------------------------
 
-DATA_DIR = Path(__file__).resolve().parents[1] / "data" / "processed"
+DATA_DIR = Path(__file__).resolve().parents[2] / "data" / "processed"
 train = pd.read_csv(DATA_DIR / "v1_train.csv")  # Read only the training split from disk.
 
 X_train = train.drop(columns=["disease"])  # Keep all symptom columns as model inputs.

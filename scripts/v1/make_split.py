@@ -6,7 +6,7 @@ from sklearn.model_selection import (
     GroupShuffleSplit,
 )  # Import GroupShuffleSplit to split data while keeping identical symptom vectors in the same group.
 
-DATA_DIR = Path(__file__).resolve().parents[1] / "data" / "processed"
+DATA_DIR = Path(__file__).resolve().parents[2] / "data" / "processed"
 INPUT_FILE = DATA_DIR / "v1_standardized.csv"
 
 TRAIN_FILE = DATA_DIR / "v1_train.csv"

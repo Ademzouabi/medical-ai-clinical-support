@@ -12,7 +12,7 @@ from sklearn.metrics import (
 
 
 # Load data  # Read the training and validation sets from their CSV files.
-DATA_DIR = Path(__file__).resolve().parents[1] / "data" / "processed"
+DATA_DIR = Path(__file__).resolve().parents[2] / "data" / "processed"
 train = pd.read_csv(DATA_DIR / "v1_train.csv")  # Load the training set.
 validation = pd.read_csv(DATA_DIR / "v1_validation.csv")  # Load the validation set.
 

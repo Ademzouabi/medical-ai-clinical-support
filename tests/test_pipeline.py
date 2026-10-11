@@ -221,7 +221,7 @@ class PipelineTests(unittest.TestCase):
 
         self.assertEqual(
             module.MODEL_PATH,
-            project_dir / "models" / "final_logistic_regression.pkl",
+            project_dir / "models" / "v1" / "final_logistic_regression.pkl",
         )
         self.assertEqual(module.model.n_features_in_, 26)
         results = module.predict_differential(

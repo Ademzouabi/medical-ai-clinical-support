@@ -12,7 +12,7 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent
 PROJECT_DIR = BASE_DIR.parent
 # Keeping this path relative to source makes model loading work outside the project directory.
-MODEL_PATH = PROJECT_DIR / "models" / "final_logistic_regression.pkl"
+MODEL_PATH = PROJECT_DIR / "models" / "v1" / "final_logistic_regression.pkl"
 
 model = joblib.load(MODEL_PATH)
 

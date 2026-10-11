@@ -1,10 +1,11 @@
-"""Train and report a Random Forest baseline on the V1 processed datasets."""
+"""Train and report a Logistic Regression baseline on the V1 processed datasets."""
 
 import pandas as pd  # Import pandas to read CSV files and handle tabular data.
 from pathlib import Path
 
-from sklearn.ensemble import RandomForestClassifier
-# Import the random forest model for multi-class classification.
+from sklearn.linear_model import (
+    LogisticRegression,
+)  # Import the logistic regression model for multi-class classification.
 from sklearn.metrics import (
     accuracy_score,
     classification_report,
@@ -14,7 +15,7 @@ from sklearn.metrics import (
 
 # Load data  # Read the train, validation, and test datasets from CSV files.
 
-DATA_DIR = Path(__file__).resolve().parents[1] / "data" / "processed"
+DATA_DIR = Path(__file__).resolve().parents[2] / "data" / "processed"
 train = pd.read_csv(DATA_DIR / "v1_train.csv")  # Load the training split into a DataFrame.
 validation = pd.read_csv(
 DATA_DIR / "v1_validation.csv"
@@ -42,10 +43,9 @@ y_test = test["disease"]  # Keep the disease label as the test target.
 
 # Create model  # Initialize the logistic regression classifier.
 
-model = RandomForestClassifier(
-    n_estimators=300,
-    random_state=42,
-    n_jobs=-1
+model = LogisticRegression(  # Create a logistic regression model with fixed randomness for reproducibility.
+    max_iter=2000,  # Increase the number of optimization iterations so the model can converge.
+    random_state=42,  # Set a fixed random seed for stable results.
 )
 
 

@@ -3,7 +3,7 @@
 import pandas as pd  # Import the pandas library so we can read and manipulate CSV data in a DataFrame.
 from pathlib import Path
 
-PROJECT_DIR = Path(__file__).resolve().parents[1]
+PROJECT_DIR = Path(__file__).resolve().parents[2]
 INPUT_FILE = PROJECT_DIR / "data" / "raw" / "Final_Augmented_dataset_Diseases_and_Symptoms.csv" / "Final_Augmented_dataset_Diseases_and_Symptoms.csv"
 OUTPUT_FILE = PROJECT_DIR / "data" / "processed" / "v1_standardized.csv"
 

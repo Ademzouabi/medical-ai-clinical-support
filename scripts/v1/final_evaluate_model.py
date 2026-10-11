@@ -17,7 +17,7 @@ from sklearn.metrics import (
 # 1. Load datasets
 # ============================================================
 
-PROJECT_DIR = Path(__file__).resolve().parents[1]
+PROJECT_DIR = Path(__file__).resolve().parents[2]
 DATA_DIR = PROJECT_DIR / "data" / "processed"
 train = pd.read_csv(DATA_DIR / "v1_train.csv")
 validation = pd.read_csv(DATA_DIR / "v1_validation.csv")
@@ -213,7 +213,7 @@ print(cm_df)
 # 11. Save the final model
 # ============================================================
 
-model_filename = PROJECT_DIR / "models" / "final_logistic_regression.pkl"
+model_filename = PROJECT_DIR / "models" / "v1" / "final_logistic_regression.pkl"
 
 joblib.dump(
     model,

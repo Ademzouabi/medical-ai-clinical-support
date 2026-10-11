@@ -1,0 +1,598 @@
+{
+  "report_type": "v2_grouped_split_audit",
+  "schema_version": "2.0",
+  "standardized_file": "C:\\project medical model\\data\\processed\\v2\\standardized.csv",
+  "standardized_sha256": "cb11fdb8e1826b8c889ec89445322e01f131259a1d6fc222edda5fb839160153",
+  "feature_schema_file": "C:\\project medical model\\config\\v2\\feature_schema.json",
+  "feature_schema_sha256": "fa940a429f7f243cc81092734632783369b774469c36db1201595a6333ffb2f8",
+  "disease_scope_file": "C:\\project medical model\\config\\v2\\disease_scope.json",
+  "disease_scope_sha256": "e5c90a972b2146705bee896338e68e1877c03bcb5da7a55732e036b1ac8d4c13",
+  "split_manifest_file": "C:\\project medical model\\data\\processed\\v2\\split_manifest.csv",
+  "split_method": {
+    "name": "StratifiedGroupKFold",
+    "n_splits": 5,
+    "shuffle": true,
+    "random_state": 42,
+    "outer_test_fold": 4,
+    "inner_validation_fold": 1
+  },
+  "contract": {
+    "row_count": 35946,
+    "feature_count": 47,
+    "feature_order": [
+      "fever",
+      "cough",
+      "dyspnea",
+      "wheezing",
+      "sore_throat",
+      "nasal_congestion",
+      "sneezing",
+      "diarrhea",
+      "constipation",
+      "headache",
+      "palpitations",
+      "joint_pain",
+      "joint_swelling",
+      "back_pain",
+      "pelvic_pain",
+      "vaginal_discharge",
+      "skin_rash",
+      "peripheral_edema",
+      "fatigue",
+      "dysphagia",
+      "syncope",
+      "dysuria",
+      "pruritus",
+      "myalgia",
+      "loss_of_appetite",
+      "sharp chest pain",
+      "burning chest pain",
+      "nausea",
+      "vomiting",
+      "sharp abdominal pain",
+      "burning abdominal pain",
+      "upper abdominal pain",
+      "lower abdominal pain",
+      "heartburn",
+      "blood in stool",
+      "rectal bleeding",
+      "vomiting blood",
+      "dizziness",
+      "sweating",
+      "intermenstrual bleeding",
+      "spotting or bleeding during pregnancy",
+      "frequent urination",
+      "excessive urination at night",
+      "skin lesion",
+      "apnea",
+      "paresthesia",
+      "chills"
+    ],
+    "disease_count": 36,
+    "disease_order": [
+      "hypoglycemia",
+      "obstructive sleep apnea (osa)",
+      "iron deficiency anemia",
+      "concussion",
+      "gout",
+      "seasonal allergies (hay fever)",
+      "gastrointestinal hemorrhage",
+      "esophagitis",
+      "sepsis",
+      "strep throat",
+      "anxiety",
+      "acute bronchiolitis",
+      "carpal tunnel syndrome",
+      "heart failure",
+      "pulmonary embolism",
+      "benign prostatic hyperplasia (bph)",
+      "heart attack",
+      "pyogenic skin infection",
+      "sickle cell crisis",
+      "bell palsy",
+      "alcohol withdrawal",
+      "eczema",
+      "acute pancreatitis",
+      "diverticulitis",
+      "angina",
+      "common cold",
+      "labyrinthitis",
+      "osteoarthritis",
+      "croup",
+      "rheumatoid arthritis",
+      "spontaneous abortion",
+      "hemorrhoids",
+      "pneumonia",
+      "vaginitis",
+      "idiopathic painful menstruation",
+      "hiatal hernia"
+    ]
+  },
+  "checks": {
+    "input_columns_match_schema": true,
+    "all_rows_assigned_once": true,
+    "all_rows_and_labels_preserved": true,
+    "identical_vectors_do_not_cross_partitions": true,
+    "all_diseases_present_in_train_and_validation": true,
+    "test_contains_34_diseases": true,
+    "test_missing_labels": [
+      "carpal tunnel syndrome",
+      "gout"
+    ],
+    "saved_partition_csvs_read_back_and_match": true,
+    "saved_features_are_binary_and_nonnull": true,
+    "saved_vector_groups_do_not_overlap": true,
+    "saved_manifest_matches_assignments": true,
+    "training_performed": false
+  },
+  "global_conflicts": {
+    "conflicting_vector_count": 506,
+    "rows_in_conflicting_vectors": 16385
+  },
+  "partitions": {
+    "train": {
+      "row_count": 22361,
+      "unique_vector_count": 3288,
+      "disease_class_count": 36,
+      "conflicting_vector_count": 331,
+      "rows_in_conflicting_vectors": 9690,
+      "class_support": {
+        "acute bronchiolitis": {
+          "rows": 771,
+          "distinct_vectors": 81
+        },
+        "acute pancreatitis": {
+          "rows": 772,
+          "distinct_vectors": 160
+        },
+        "alcohol withdrawal": {
+          "rows": 430,
+          "distinct_vectors": 9
+        },
+        "angina": {
+          "rows": 591,
+          "distinct_vectors": 21
+        },
+        "anxiety": {
+          "rows": 696,
+          "distinct_vectors": 9
+        },
+        "bell palsy": {
+          "rows": 359,
+          "distinct_vectors": 2
+        },
+        "benign prostatic hyperplasia (bph)": {
+          "rows": 596,
+          "distinct_vectors": 2
+        },
+        "carpal tunnel syndrome": {
+          "rows": 463,
+          "distinct_vectors": 1
+        },
+        "common cold": {
+          "rows": 580,
+          "distinct_vectors": 159
+        },
+        "concussion": {
+          "rows": 750,
+          "distinct_vectors": 20
+        },
+        "croup": {
+          "rows": 580,
+          "distinct_vectors": 81
+        },
+        "diverticulitis": {
+          "rows": 777,
+          "distinct_vectors": 663
+        },
+        "eczema": {
+          "rows": 758,
+          "distinct_vectors": 10
+        },
+        "esophagitis": {
+          "rows": 778,
+          "distinct_vectors": 670
+        },
+        "gastrointestinal hemorrhage": {
+          "rows": 777,
+          "distinct_vectors": 304
+        },
+        "gout": {
+          "rows": 600,
+          "distinct_vectors": 1
+        },
+        "heart attack": {
+          "rows": 581,
+          "distinct_vectors": 82
+        },
+        "heart failure": {
+          "rows": 568,
+          "distinct_vectors": 10
+        },
+        "hemorrhoids": {
+          "rows": 591,
+          "distinct_vectors": 20
+        },
+        "hiatal hernia": {
+          "rows": 580,
+          "distinct_vectors": 404
+        },
+        "hypoglycemia": {
+          "rows": 781,
+          "distinct_vectors": 20
+        },
+        "idiopathic painful menstruation": {
+          "rows": 581,
+          "distinct_vectors": 10
+        },
+        "iron deficiency anemia": {
+          "rows": 438,
+          "distinct_vectors": 41
+        },
+        "labyrinthitis": {
+          "rows": 420,
+          "distinct_vectors": 20
+        },
+        "obstructive sleep apnea (osa)": {
+          "rows": 778,
+          "distinct_vectors": 21
+        },
+        "osteoarthritis": {
+          "rows": 557,
+          "distinct_vectors": 5
+        },
+        "pneumonia": {
+          "rows": 776,
+          "distinct_vectors": 307
+        },
+        "pulmonary embolism": {
+          "rows": 554,
+          "distinct_vectors": 10
+        },
+        "pyogenic skin infection": {
+          "rows": 583,
+          "distinct_vectors": 5
+        },
+        "rheumatoid arthritis": {
+          "rows": 431,
+          "distinct_vectors": 5
+        },
+        "seasonal allergies (hay fever)": {
+          "rows": 575,
+          "distinct_vectors": 20
+        },
+        "sepsis": {
+          "rows": 581,
+          "distinct_vectors": 83
+        },
+        "sickle cell crisis": {
+          "rows": 586,
+          "distinct_vectors": 20
+        },
+        "spontaneous abortion": {
+          "rows": 776,
+          "distinct_vectors": 41
+        },
+        "strep throat": {
+          "rows": 775,
+          "distinct_vectors": 504
+        },
+        "vaginitis": {
+          "rows": 571,
+          "distinct_vectors": 20
+        }
+      }
+    },
+    "validation": {
+      "row_count": 6759,
+      "unique_vector_count": 818,
+      "disease_class_count": 36,
+      "conflicting_vector_count": 80,
+      "rows_in_conflicting_vectors": 3945,
+      "class_support": {
+        "acute bronchiolitis": {
+          "rows": 192,
+          "distinct_vectors": 21
+        },
+        "acute pancreatitis": {
+          "rows": 193,
+          "distinct_vectors": 41
+        },
+        "alcohol withdrawal": {
+          "rows": 97,
+          "distinct_vectors": 3
+        },
+        "angina": {
+          "rows": 141,
+          "distinct_vectors": 5
+        },
+        "anxiety": {
+          "rows": 218,
+          "distinct_vectors": 3
+        },
+        "bell palsy": {
+          "rows": 161,
+          "distinct_vectors": 1
+        },
+        "benign prostatic hyperplasia (bph)": {
+          "rows": 289,
+          "distinct_vectors": 1
+        },
+        "carpal tunnel syndrome": {
+          "rows": 433,
+          "distinct_vectors": 1
+        },
+        "common cold": {
+          "rows": 144,
+          "distinct_vectors": 37
+        },
+        "concussion": {
+          "rows": 198,
+          "distinct_vectors": 6
+        },
+        "croup": {
+          "rows": 144,
+          "distinct_vectors": 19
+        },
+        "diverticulitis": {
+          "rows": 194,
+          "distinct_vectors": 165
+        },
+        "eczema": {
+          "rows": 217,
+          "distinct_vectors": 3
+        },
+        "esophagitis": {
+          "rows": 194,
+          "distinct_vectors": 166
+        },
+        "gastrointestinal hemorrhage": {
+          "rows": 194,
+          "distinct_vectors": 78
+        },
+        "gout": {
+          "rows": 611,
+          "distinct_vectors": 1
+        },
+        "heart attack": {
+          "rows": 144,
+          "distinct_vectors": 20
+        },
+        "heart failure": {
+          "rows": 152,
+          "distinct_vectors": 3
+        },
+        "hemorrhoids": {
+          "rows": 136,
+          "distinct_vectors": 5
+        },
+        "hiatal hernia": {
+          "rows": 145,
+          "distinct_vectors": 102
+        },
+        "hypoglycemia": {
+          "rows": 197,
+          "distinct_vectors": 6
+        },
+        "idiopathic painful menstruation": {
+          "rows": 142,
+          "distinct_vectors": 3
+        },
+        "iron deficiency anemia": {
+          "rows": 108,
+          "distinct_vectors": 11
+        },
+        "labyrinthitis": {
+          "rows": 92,
+          "distinct_vectors": 5
+        },
+        "obstructive sleep apnea (osa)": {
+          "rows": 185,
+          "distinct_vectors": 5
+        },
+        "osteoarthritis": {
+          "rows": 115,
+          "distinct_vectors": 1
+        },
+        "pneumonia": {
+          "rows": 193,
+          "distinct_vectors": 73
+        },
+        "pulmonary embolism": {
+          "rows": 163,
+          "distinct_vectors": 3
+        },
+        "pyogenic skin infection": {
+          "rows": 212,
+          "distinct_vectors": 2
+        },
+        "rheumatoid arthritis": {
+          "rows": 152,
+          "distinct_vectors": 2
+        },
+        "seasonal allergies (hay fever)": {
+          "rows": 161,
+          "distinct_vectors": 6
+        },
+        "sepsis": {
+          "rows": 145,
+          "distinct_vectors": 20
+        },
+        "sickle cell crisis": {
+          "rows": 145,
+          "distinct_vectors": 5
+        },
+        "spontaneous abortion": {
+          "rows": 199,
+          "distinct_vectors": 11
+        },
+        "strep throat": {
+          "rows": 193,
+          "distinct_vectors": 124
+        },
+        "vaginitis": {
+          "rows": 160,
+          "distinct_vectors": 6
+        }
+      }
+    },
+    "test": {
+      "row_count": 6826,
+      "unique_vector_count": 1030,
+      "disease_class_count": 34,
+      "conflicting_vector_count": 95,
+      "rows_in_conflicting_vectors": 2750,
+      "class_support": {
+        "acute bronchiolitis": {
+          "rows": 241,
+          "distinct_vectors": 26
+        },
+        "acute pancreatitis": {
+          "rows": 242,
+          "distinct_vectors": 51
+        },
+        "alcohol withdrawal": {
+          "rows": 138,
+          "distinct_vectors": 4
+        },
+        "angina": {
+          "rows": 174,
+          "distinct_vectors": 6
+        },
+        "anxiety": {
+          "rows": 284,
+          "distinct_vectors": 4
+        },
+        "bell palsy": {
+          "rows": 165,
+          "distinct_vectors": 1
+        },
+        "benign prostatic hyperplasia (bph)": {
+          "rows": 321,
+          "distinct_vectors": 1
+        },
+        "carpal tunnel syndrome": {
+          "rows": 0,
+          "distinct_vectors": 0
+        },
+        "common cold": {
+          "rows": 181,
+          "distinct_vectors": 50
+        },
+        "concussion": {
+          "rows": 243,
+          "distinct_vectors": 6
+        },
+        "croup": {
+          "rows": 180,
+          "distinct_vectors": 25
+        },
+        "diverticulitis": {
+          "rows": 243,
+          "distinct_vectors": 207
+        },
+        "eczema": {
+          "rows": 232,
+          "distinct_vectors": 3
+        },
+        "esophagitis": {
+          "rows": 243,
+          "distinct_vectors": 206
+        },
+        "gastrointestinal hemorrhage": {
+          "rows": 243,
+          "distinct_vectors": 94
+        },
+        "gout": {
+          "rows": 0,
+          "distinct_vectors": 0
+        },
+        "heart attack": {
+          "rows": 182,
+          "distinct_vectors": 26
+        },
+        "heart failure": {
+          "rows": 183,
+          "distinct_vectors": 3
+        },
+        "hemorrhoids": {
+          "rows": 181,
+          "distinct_vectors": 7
+        },
+        "hiatal hernia": {
+          "rows": 181,
+          "distinct_vectors": 126
+        },
+        "hypoglycemia": {
+          "rows": 237,
+          "distinct_vectors": 6
+        },
+        "idiopathic painful menstruation": {
+          "rows": 183,
+          "distinct_vectors": 3
+        },
+        "iron deficiency anemia": {
+          "rows": 137,
+          "distinct_vectors": 12
+        },
+        "labyrinthitis": {
+          "rows": 142,
+          "distinct_vectors": 7
+        },
+        "obstructive sleep apnea (osa)": {
+          "rows": 233,
+          "distinct_vectors": 6
+        },
+        "osteoarthritis": {
+          "rows": 224,
+          "distinct_vectors": 2
+        },
+        "pneumonia": {
+          "rows": 243,
+          "distinct_vectors": 101
+        },
+        "pulmonary embolism": {
+          "rows": 163,
+          "distinct_vectors": 3
+        },
+        "pyogenic skin infection": {
+          "rows": 116,
+          "distinct_vectors": 1
+        },
+        "rheumatoid arthritis": {
+          "rows": 95,
+          "distinct_vectors": 1
+        },
+        "seasonal allergies (hay fever)": {
+          "rows": 174,
+          "distinct_vectors": 6
+        },
+        "sepsis": {
+          "rows": 183,
+          "distinct_vectors": 25
+        },
+        "sickle cell crisis": {
+          "rows": 182,
+          "distinct_vectors": 7
+        },
+        "spontaneous abortion": {
+          "rows": 237,
+          "distinct_vectors": 12
+        },
+        "strep throat": {
+          "rows": 242,
+          "distinct_vectors": 154
+        },
+        "vaginitis": {
+          "rows": 178,
+          "distinct_vectors": 6
+        }
+      }
+    }
+  },
+  "group_overlap_counts": {
+    "train/validation": 0,
+    "train/test": 0,
+    "validation/test": 0
+  }
+}

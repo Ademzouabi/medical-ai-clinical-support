@@ -15,7 +15,7 @@ from sklearn.metrics import (
 # Load data
 # --------------------------------------------------
 
-DATA_DIR = Path(__file__).resolve().parents[1] / "data" / "processed"
+DATA_DIR = Path(__file__).resolve().parents[2] / "data" / "processed"
 train = pd.read_csv(DATA_DIR / "v1_train.csv")  # Load the training split.
 validation = pd.read_csv(DATA_DIR / "v1_validation.csv")  # Load the validation split.
 
